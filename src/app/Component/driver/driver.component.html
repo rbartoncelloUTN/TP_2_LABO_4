@@ -1,0 +1,122 @@
+<div class="container">
+  <div>
+    <h2 style="text-align: center">Alta de Repartidor</h2>
+    <form [formGroup]="driverForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label class="label" for="dni">DNI</label>
+        <input id="dni" type="number" formControlName="dni" class="input" />
+        <div
+          *ngIf="
+            driverForm.get('dni')?.invalid && driverForm.get('dni')?.touched
+          "
+          class="error"
+        >
+          DNI es requerido y debe ser un número.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="nombre">Nombre</label>
+        <input id="nombre" type="text" formControlName="nombre" class="input" />
+        <div
+          *ngIf="
+            driverForm.get('nombre')?.invalid &&
+            driverForm.get('nombre')?.touched
+          "
+          class="error"
+        >
+          Nombre es requerido y debe tener al menos 3 caracteres.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="edad">Edad</label>
+        <input id="edad" type="number" formControlName="edad" class="input" />
+        <div
+          *ngIf="
+            driverForm.get('edad')?.invalid && driverForm.get('edad')?.touched
+          "
+          class="error"
+        >
+          Edad es requerida y debe estar entre 18 y 65 años.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="capacidad"
+          >Capacidad de Transporte (unidades de helados)</label
+        >
+        <input
+          id="capacidad"
+          type="number"
+          formControlName="capacidad"
+          class="input"
+        />
+        <div
+          *ngIf="
+            driverForm.get('capacidad')?.invalid &&
+            driverForm.get('capacidad')?.touched
+          "
+          class="error"
+        >
+          Capacidad es requerida y debe ser al menos 1.
+        </div>
+      </div>
+
+      <div class="form-group select-wrapper">
+        <label class="label" for="pais">País de Origen</label>
+        <input
+          id="pasi"
+          type="text"
+          formControlName="pais"
+          class="input"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="unidadPropia">Unidad Propia</label>
+        <input
+          id="unidadPropia"
+          type="checkbox"
+          formControlName="unidadPropia"
+          class="input"
+        />
+        <div
+          *ngIf="
+            driverForm.get('unidadPropia')?.invalid &&
+            driverForm.get('unidadPropia')?.touched
+          "
+          class="error"
+        >
+          Debe confirmar si tiene unidad propia.
+        </div>
+      </div>
+
+      <button type="submit" class="btn" [disabled]="driverForm.invalid">
+        Dar de alta
+      </button>
+    </form>
+  </div>
+  <div class="country-list-container">
+    <div class="country-list">
+      <div *ngFor="let country of countries" class="country-item">
+        <button
+          (click)="handlePressCountry(country.name)"
+          class="country-button"
+        >
+          <div class="flag-wrapper">
+            <img
+              [src]="country.flag.image"
+              [alt]="country.flag.alt"
+              class="flag-icon"
+            />
+          </div>
+          <div class="country-name">
+            {{ country.name }}
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

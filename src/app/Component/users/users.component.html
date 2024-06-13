@@ -1,0 +1,42 @@
+<!-- src/app/user-list/user-list.component.html -->
+
+<div class="container">
+  <div class="btn-container">
+    <button class="btn btn-primary" (click)="addAdmin()">
+      Nuevo Administrador
+    </button>
+  </div>
+  <div class="title-container">
+    <h1>Lista de Usuarios</h1>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Rol</th>
+        <th>Correo</th>
+        <th>DNI</th>
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Especialidad</th>
+        <th>Obra Social</th>
+        <th>Habilitado</th>
+        <th>Verificado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.rol }}</td>
+        <td>{{ user.mail }}</td>
+        <td>{{ user.dni }}</td>
+        <td>{{ user.apellido }}</td>
+        <td>{{ user.nombre }}</td>
+        <td>{{ user.edad }}</td>
+        <td>{{ user.especialidad }}</td>
+        <td>{{ user.obraSocial }}</td>
+        <td [innerHTML]="user.enabled | booleanToButton"></td>
+        <td [innerHTML]="user.verificated | booleanToButton"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,36 @@
+.right-details {
+  padding: 20px;
+  background-color: #f9f9f9;
+  width: 100vh;
+  height: 40vh;
+}
+
+.details {
+  display: flex;
+  border: 1px solid darkblue;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  align-items: center;
+}
+
+.right-details h2 {
+  margin-bottom: 10px;
+}
+
+.country-info {
+  display: flex;
+  align-items: center;
+}
+
+.country-flag {
+  width: 100px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.country-name {
+  font-size: 16px;
+}

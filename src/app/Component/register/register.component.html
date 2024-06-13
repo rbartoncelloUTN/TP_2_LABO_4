@@ -1,0 +1,152 @@
+<div class="container">
+  <app-loader [isLoading]="isLoading"></app-loader>
+  <h2 style="text-align: center">Registro</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="dni">DNI</label>
+      <input
+        id="dni"
+        type="number"
+        formControlName="dni"
+        class="form-control"
+        placeholder="99999999"
+        [style]="isError('dni') ? 'border-color: red;' : ''"
+      />
+      <div *ngIf="isError('dni')" class="error">
+        DNI es requerido y debe ser un número.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input
+        id="nombre"
+        type="text"
+        formControlName="nombre"
+        class="form-control"
+        placeholder="Lionel"
+        [style]="isError('nombre') ? 'border-color: red;' : ''"
+      />
+      <div *ngIf="isError('nombre')" class="error">
+        Nombre es requerido y debe tener al menos 3 caracteres.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="apellido">Apellido</label>
+      <input
+        id="apellido"
+        type="text"
+        formControlName="apellido"
+        class="form-control"
+        placeholder="Messi"
+        [style]="isError('apellido') ? 'border-color: red;' : ''"
+      />
+      <div *ngIf="isError('apellido')" class="error">
+        Apellido es requerido y debe tener al menos 3 caracteres.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="edad">Edad</label>
+      <input
+        id="edad"
+        type="number"
+        formControlName="edad"
+        class="form-control"
+        placeholder="18"
+        [style]="isError('edad') ? 'border-color: red;' : ''"
+      />
+      <div *ngIf="isError('edad')" class="error">
+        Edad es requerida y debe estar entre 0 y 100 años.
+      </div>
+    </div>
+
+    <div class="form-group" [hiddenComponent]="!isPatient">
+      <label for="obraSocial">Obra Social</label>
+      <input
+        id="obraSocial"
+        type="text"
+        formControlName="obraSocial"
+        class="form-control"
+        placeholder="SMG"
+        [style]="isError('obraSocial') ? 'border-color: red;' : ''"
+      />
+      <div *ngIf="isError('obraSocial')" class="error">
+        Obra Social es requerida.
+      </div>
+    </div>
+
+    <div class="form-group" [hiddenComponent]="isPatient || isAdmin">
+      <label for="especialidad">Especialidad</label>
+      <input
+        id="especialidad"
+        type="text"
+        formControlName="especialidad"
+        class="form-control"
+      />
+      <div *ngIf="isError('especialidad')" class="error">
+        Especialidad es requerida.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="mail">Correo Electronico</label>
+      <input
+        id="mail"
+        type="email"
+        formControlName="mail"
+        class="form-control"
+        placeholder="usuario@mail.com"
+        [style]="isError('mail') ? 'border-color: red;' : ''"
+      />
+      <div *ngIf="isError('mail')" class="error">
+        Mail es requerido y debe ser una dirección válida.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        class="form-control"
+        [style]="isError('password') ? 'border-color: red;' : ''"
+      />
+      <div *ngIf="isError('password')" class="error">
+        Contraseña es requerida y debe tener al menos 6 caracteres.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="perfilImagen1">Imagen de Perfil 1</label>
+      <input
+        id="perfilImagen1"
+        type="file"
+        formControlName="perfilImagen1"
+        class="form-control"
+      />
+      <div *ngIf="isError('perfilImagen1')" class="error">
+        Imagen de Perfil 1 es requerida.
+      </div>
+    </div>
+
+    <div class="form-group" [hiddenComponent]="!isPatient">
+      <label for="perfilImagen2">Imagen de Perfil 2</label>
+      <input
+        id="perfilImagen2"
+        type="file"
+        formControlName="perfilImagen2"
+        class="form-control"
+      />
+      <div *ngIf="isError('perfilImagen2')" class="error">
+        Imagen de Perfil 2 es requerida.
+      </div>
+    </div>
+    @if(flagError){
+    <p class="error">{{ msjError }}</p>
+    }
+    <button type="submit" class="btn btn-primary">Registrar</button>
+  </form>
+</div>

@@ -1,0 +1,57 @@
+<div class="container">
+  <div>
+    <h2 style="text-align: center">Alta de Helado</h2>
+    <form (formGroup)="(iceCreamForm)" (ngSubmit)="(onSubmit)">
+      <div class="form-group">
+        <label class="label" for="sabor">Sabor</label>
+        <input id="sabor" type="text" formControlName="sabor" class="input" />
+        @if (iceCreamForm.get('sabor')?.invalid &&
+        iceCreamForm.get('sabor')?.touched) {
+        <div class="error">Sabor es requerido.</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="tipo">Tipo</label>
+        <select id="tipo" formControlName="tipo" class="input">
+          <option value="" disabled selected>Selecciona un tipo</option>
+          <option value="agua">Agua</option>
+          <option value="crema">Crema</option>
+        </select>
+        @if(iceCreamForm.get('tipo')?.invalid &&
+        iceCreamForm.get('tipo')?.touched) {
+        <div class="error">Tipo es requerido.</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="precio">Precio</label>
+        <input
+          id="precio"
+          type="number"
+          formControlName="precio"
+          class="input"
+        />
+        @if(iceCreamForm.get('precio')?.invalid &&
+        iceCreamForm.get('precio')?.touched){
+        <div class="error">
+          Precio es requerido y debe ser un número positivo.
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="peso">Peso (gramos)</label>
+        <input id="peso" type="number" formControlName="peso" class="input" />
+        @if(iceCreamForm.get('peso')?.invalid &&
+        iceCreamForm.get('peso')?.touched){
+        <div class="error">
+          Peso es requerido y debe estar entre 250 y 1000 gramos.
+        </div>
+        }
+      </div>
+
+      <button type="submit" class="btn">Dar de alta</button>
+    </form>
+  </div>
+</div>

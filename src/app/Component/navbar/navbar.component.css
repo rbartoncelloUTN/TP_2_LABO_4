@@ -1,0 +1,22 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #333; /* Color de fondo */
+  color: #ff4b2b; /* Color del texto */
+  display: flex;
+  padding: 0 16px; /* Espaciado horizontal */
+  align-items: center;
+  height: 56px; /* Altura del navbar */
+  font-family: "Roboto", "Helvetica Neue", sans-serif; /* Fuente */
+}
+
+.navbar-logo img {
+  height: 40px; /* Altura del logo */
+  margin-right: 16px; /* Espaciado a la derecha del logo */
+}
+
+button {
+  font-size: larger;
+  margin-right: 10px;
+}

@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="list-container">
+    <ul class="driver-list">
+      <li *ngFor="let driver of drivers" (click)="handleOnClick(driver)">
+        {{ driver.nombre }}
+      </li>
+    </ul>
+  </div>
+  <div class="details-container">
+    <app-driver-details [driver]="driver"></app-driver-details>
+    <app-country-details [name]="driver?.pais"></app-country-details>
+  </div>
+</div>

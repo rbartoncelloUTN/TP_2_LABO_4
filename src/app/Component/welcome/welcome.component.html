@@ -1,0 +1,17 @@
+<div class="user-profile">
+  <img class="avatar" [src]="userData.avatar_url" alt="Avatar" />
+  <div class="user-info">
+    <h2>{{ userData.name }}</h2>
+    <p>{{ userData.login }}</p>
+    <p>{{ userData.bio }}</p>
+    <ul>
+      <li><strong>Followers:</strong> {{ userData.followers }}</li>
+      <li><strong>Following:</strong> {{ userData.following }}</li>
+      <li><strong>Public Repos:</strong> {{ userData.public_repos }}</li>
+      <!-- Añade más detalles si es necesario -->
+    </ul>
+    <a class="btn" href="{{ userData.html_url }}" target="_blank"
+      >Ver perfil en GitHub</a
+    >
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="list-container">
+    <ul class="driver-list">
+      <li *ngFor="let icecrean of icecreans" (click)="handleOnClick(icecrean)">
+        {{ icecrean.nombre }}
+      </li>
+    </ul>
+  </div>
+  <div class="details-container">
+    <app-icecream-add></app-icecream-add>
+  </div>
+</div>
