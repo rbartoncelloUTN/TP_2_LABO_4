@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { GithubService } from '../../services/github/github.service';
 import { IGitHub } from '../../Interfaces/github';
+import { Roles, User } from '../../Interfaces/user';
+import { AuthService } from '../../services/Auth/auth.service';
 
 @Component({
   selector: 'app-welcome',
@@ -10,12 +12,14 @@ import { IGitHub } from '../../Interfaces/github';
   styleUrl: './welcome.component.css',
 })
 export class WelcomeComponent implements OnInit {
-  public userData!: IGitHub;
+  auth = inject(AuthService);
+
+  userData!: User;
   constructor(private githubService: GithubService) {}
   ngOnInit(): void {
-    this.githubService.getData().subscribe((data) => {
-      //console.log(data);
-      this.userData = data;
-    });
+    const userData = localStorage.getItem('users') || '';
+    const users = (JSON.parse(userData) as User[]) || [];
+    console.log(this.auth.getUser());
+    this.userData = this.auth.getUser() as User;
   }
 }

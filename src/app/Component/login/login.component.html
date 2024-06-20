@@ -40,39 +40,65 @@
         class="btn btn-primary full-width"
         style="background-color: darkgoldenrod"
       >
-        Registrar paciente
-      </button>
-      <button
-        (click)="register($event)"
-        type="button"
-        class="btn btn-primary full-width"
-        style="background-color: darkgoldenrod"
-      >
-        Registrar espicialista
+        Registrarse
       </button>
     </div>
     <div class="button-group">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="autoCompleteAdmin($event)"
-      >
-        Admin
-      </button>
-      <button
-        type="button"
-        class="btn btn-info"
-        (click)="autoCompleteEmployer($event)"
-      >
-        Espicialista
-      </button>
-      <button
-        type="button"
-        class="btn btn-info"
-        (click)="autoCompleteEmployer($event)"
-      >
-        Paciente
-      </button>
+      <div>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'admin@tidissajiiu.com')"
+        >
+          Admin
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'admin2@yopmail.com')"
+        >
+          Admin 2
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-info"
+          (click)="autoCompleteDoctor($event)"
+        >
+          Doctor
+        </button>
+        <button
+          type="button"
+          class="btn btn-info"
+          (click)="autoCompleteEnfermero($event)"
+        >
+          Enfermero (blockeado)
+        </button>
+        <button
+          type="button"
+          class="btn btn-info"
+          (click)="autoCompleteCirujano($event)"
+        >
+          Cirujano (sin validar email)
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'paciente1@yopmail.com')"
+        >
+          Paciente 1
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'paciente2@yopmail.com')"
+        >
+          Paciente 2
+        </button>
+      </div>
     </div>
   </div>
 </div>

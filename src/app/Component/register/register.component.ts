@@ -166,7 +166,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.especialidades);
     if (this.isPatient) {
       this.userForm.get('especialidad')?.setValidators(null);
       this.userForm.get('especialidad')?.updateValueAndValidity();
@@ -223,15 +222,19 @@ export class RegisterComponent implements OnInit {
               : {
                   especialidad: this.userForm.value.especialidad || null,
                   enabled: true,
+                  verificated: false,
                   rol: this.isAdmin ? Roles.ADMIN : Roles.DOCTOR,
                 }),
           });
 
           this.uploadImage();
+
+          if (!this.isAdmin) {
+            this.router.navigate(['login']);
+          }
           this.userForm.reset();
 
-          this.router.navigate(['login']);
-          signOut(this.auth);
+          //signOut(this.auth);
         })
         .catch((e) => {
           this.flagError = true;
