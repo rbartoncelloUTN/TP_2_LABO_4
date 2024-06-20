@@ -87,7 +87,7 @@
         >
           <option
             *ngFor="let especialidad of especialidades"
-            [value]="especialidad"
+            [value]="especialidad.name"
           >
             {{ especialidad.name }}
           </option>
@@ -137,6 +137,7 @@
         type="file"
         formControlName="perfilImagen1"
         class="form-control"
+        (change)="saveImage($event, 1)"
       />
       <div *ngIf="isError('perfilImagen1')" class="error">
         Imagen de Perfil 1 es requerida.
@@ -150,6 +151,7 @@
         type="file"
         formControlName="perfilImagen2"
         class="form-control"
+        (change)="saveImage($event, 2)"
       />
       <div *ngIf="isError('perfilImagen2')" class="error">
         Imagen de Perfil 2 es requerida.

@@ -11,6 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  signOut,
 } from 'firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { LoaderComponent } from '../loader/loader.component';
@@ -21,6 +22,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Roles } from '../../Interfaces/user';
 import { DialogTextComponent } from '../dialog-text/dialog-text.component';
 import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
+import { Storage, ref } from '@angular/fire/storage';
+import { uploadBytes } from 'firebase/storage';
 
 @Component({
   selector: 'app-register',
@@ -46,12 +49,14 @@ export class RegisterComponent implements OnInit {
   isValid: boolean = true;
   isLoading: boolean = false;
   especialidades!: { name: string }[] | any[];
+  fileImages: any[] = [];
 
   constructor(
     private firestore: Firestore,
     private router: Router,
     private route: ActivatedRoute,
-    public auth: Auth
+    public auth: Auth,
+    private storege: Storage
   ) {}
 
   getEspecialidades(): void {
@@ -139,6 +144,27 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  saveImage($event: any, number: number): void {
+    this.fileImages.push($event.target.files[0]);
+    console.log(this.fileImages[number]);
+  }
+
+  uploadImage(): void {
+    const id = this.userForm.get('mail')?.value;
+    console.log(id);
+
+    this.fileImages.map((image, index) => {
+      const imageRef = ref(this.storege, `users/${id}/${index}`);
+      uploadBytes(imageRef, image)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    });
+  }
+
   onSubmit(): void {
     console.log(this.especialidades);
     if (this.isPatient) {
@@ -200,9 +226,12 @@ export class RegisterComponent implements OnInit {
                   rol: this.isAdmin ? Roles.ADMIN : Roles.DOCTOR,
                 }),
           });
+
+          this.uploadImage();
           this.userForm.reset();
 
           this.router.navigate(['login']);
+          signOut(this.auth);
         })
         .catch((e) => {
           this.flagError = true;
