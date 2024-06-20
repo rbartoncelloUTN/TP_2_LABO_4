@@ -15,7 +15,6 @@ import { Roles, User } from '../../Interfaces/user';
 import { LoaderComponent } from '../loader/loader.component';
 import {
   AuthService,
-  STORAGE_KEY_SESSION,
 } from '../../services/Auth/auth.service';
 
 @Component({
@@ -51,7 +50,6 @@ export class LoginComponent implements OnInit {
     const observable = collectionData(col);
 
     observable.subscribe((data) => {
-      console.log(this.users);
       const dataUsers = data as User[];
       this.users = [...this.users, ...dataUsers];
       this.users = this.users.filter(

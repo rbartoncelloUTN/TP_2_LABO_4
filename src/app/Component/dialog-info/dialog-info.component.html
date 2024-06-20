@@ -1,0 +1,16 @@
+<div [class]="data.isError ? 'body' : 'none'">
+  <h2
+    mat-dialog-title
+    [ngClass]="{ 'dialog-title': true, error: data.isError }"
+  >
+    {{ data.title }}
+  </h2>
+  <mat-dialog-content
+    [ngClass]="{ 'dialog-content': true, error: data.isError }"
+  >
+    {{ data.message }}
+  </mat-dialog-content>
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</div>

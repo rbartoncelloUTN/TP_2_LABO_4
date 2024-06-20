@@ -1,0 +1,41 @@
+.dialog-content {
+  padding: 20px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.dialog-content.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.dialog-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.dialog-title.error {
+  color: #721c24;
+}
+
+.dialog-actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.dialog-actions button {
+  font-weight: bold;
+}
+
+.mat-dialog-content {
+  padding: 0 !important;
+}
+
+.mat-dialog-actions {
+  padding: 8px 0 0 0 !important;
+}
+
+.body {
+  background-color: #f8d7da;
+}

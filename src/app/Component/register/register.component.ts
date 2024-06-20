@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,7 +6,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Firestore } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -17,7 +16,11 @@ import { Auth } from '@angular/fire/auth';
 import { LoaderComponent } from '../loader/loader.component';
 import { addDoc, collection } from 'firebase/firestore';
 import { HideComponentDirective } from '../../directives/hide-component.directive';
+import { Firestore, collectionData } from '@angular/fire/firestore';
+import { MatDialog } from '@angular/material/dialog';
 import { Roles } from '../../Interfaces/user';
+import { DialogTextComponent } from '../dialog-text/dialog-text.component';
+import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
 
 @Component({
   selector: 'app-register',
@@ -33,6 +36,8 @@ import { Roles } from '../../Interfaces/user';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
+  readonly dialog = inject(MatDialog);
+
   userForm!: FormGroup;
   isPatient: boolean = false;
   isAdmin: boolean = false;
@@ -40,6 +45,7 @@ export class RegisterComponent implements OnInit {
   msjError: string = '';
   isValid: boolean = true;
   isLoading: boolean = false;
+  especialidades!: { name: string }[] | any[];
 
   constructor(
     private firestore: Firestore,
@@ -48,7 +54,18 @@ export class RegisterComponent implements OnInit {
     public auth: Auth
   ) {}
 
+  getEspecialidades(): void {
+    let col = collection(this.firestore, 'especialidades');
+
+    const observable = collectionData(col);
+
+    observable.subscribe((data) => {
+      this.especialidades = data;
+    });
+  }
+
   ngOnInit(): void {
+    this.getEspecialidades();
     const { isPatient, isAdmin } = this.route.snapshot.queryParams;
     this.isPatient = isPatient === 'true';
     this.isAdmin = isAdmin === 'true';
@@ -74,7 +91,7 @@ export class RegisterComponent implements OnInit {
         Validators.max(100),
       ]),
       obraSocial: new FormControl('', [Validators.required]),
-      especialidad: new FormControl('', []),
+      especialidad: new FormControl('', [Validators.required]),
       mail: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [
         Validators.required,
@@ -83,13 +100,47 @@ export class RegisterComponent implements OnInit {
       perfilImagen1: new FormControl('', [Validators.required]),
       perfilImagen2: new FormControl('', [Validators.required]),
     });
+    console.log(this.especialidades);
   }
 
   isError(field: string): boolean {
     return !!(this.userForm.get(field)?.invalid && !this.isValid);
   }
 
+  onAddEspecialidad(): void {
+    console.log('Agregar nueva especialidad');
+    this.openDialog();
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogTextComponent);
+    let newSpecialty = '';
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+      newSpecialty = result;
+      const index = this.especialidades.findIndex(
+        (especialidad) =>
+          especialidad.name.toLowerCase() === newSpecialty.toLowerCase()
+      );
+      if (index >= 0) {
+        this.flagError = true;
+        this.msjError = 'La especialidad ya existe';
+        const dialogInfoRef = this.dialog.open(DialogInfoComponent, {
+          data: {
+            title: 'Error',
+            message: 'La especialidad ya existe',
+            isError: true,
+          },
+        });
+      } else {
+        this.especialidades.push({ name: newSpecialty });
+      }
+    });
+  }
+
   onSubmit(): void {
+    console.log(this.especialidades);
     if (this.isPatient) {
       this.userForm.get('especialidad')?.setValidators(null);
       this.userForm.get('especialidad')?.updateValueAndValidity();
@@ -117,7 +168,11 @@ export class RegisterComponent implements OnInit {
 
           let col = collection(
             this.firestore,
-            this.isPatient ? 'patients' : this.isAdmin ? 'administrators' : 'doctors'
+            this.isPatient
+              ? 'patients'
+              : this.isAdmin
+              ? 'administrators'
+              : 'doctors'
           );
 
           const personalInfomation = {

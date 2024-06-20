@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Agregue una nueva especialidad</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field>
+    <mat-label>Especialidad</mat-label>
+    <input matInput [(ngModel)]="especialidad" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="especialidad" cdkFocusInitial>
+    Aceptar
+  </button>
+</mat-dialog-actions>

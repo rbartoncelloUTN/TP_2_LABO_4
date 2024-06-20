@@ -16,6 +16,17 @@ h2 {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  width: 100%;
+}
+
+.select {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
 }
 
 label {
@@ -50,4 +61,23 @@ label {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.btn-add {
+  display: flex;
+  padding: 12px;
+  background-color: #229b0a;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 40px;
+  cursor: pointer;
+  height: 40px;
+  width: 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-add:hover {
+  background-color: #227650;
 }
