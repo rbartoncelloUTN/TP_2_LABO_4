@@ -91,7 +91,6 @@ export class LoginComponent implements OnInit {
     const imagesRef = ref(this.storege, `users/${id}`);
     try {
       const response = await listAll(imagesRef);
-      console.log(response);
       const urls = await Promise.all(
         response.items.map(async (item) => {
           const url = await getDownloadURL(item);

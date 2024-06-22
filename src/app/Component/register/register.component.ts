@@ -74,7 +74,6 @@ export class RegisterComponent implements OnInit {
     const { isPatient, isAdmin } = this.route.snapshot.queryParams;
     this.isPatient = isPatient === 'true';
     this.isAdmin = isAdmin === 'true';
-    console.log(this.isPatient);
     this.userForm = new FormGroup({
       dni: new FormControl('', [
         Validators.required,
@@ -105,7 +104,6 @@ export class RegisterComponent implements OnInit {
       perfilImagen1: new FormControl('', [Validators.required]),
       perfilImagen2: new FormControl('', [Validators.required]),
     });
-    console.log(this.especialidades);
   }
 
   isError(field: string): boolean {
@@ -113,7 +111,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onAddEspecialidad(): void {
-    console.log('Agregar nueva especialidad');
     this.openDialog();
   }
 
@@ -122,7 +119,6 @@ export class RegisterComponent implements OnInit {
     let newSpecialty = '';
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
       newSpecialty = result;
       const index = this.especialidades.findIndex(
         (especialidad) =>
@@ -146,12 +142,10 @@ export class RegisterComponent implements OnInit {
 
   saveImage($event: any, number: number): void {
     this.fileImages.push($event.target.files[0]);
-    console.log(this.fileImages[number]);
   }
 
   uploadImage(): void {
     const id = this.userForm.get('mail')?.value;
-    console.log(id);
 
     this.fileImages.map((image, index) => {
       const imageRef = ref(this.storege, `users/${id}/${index}`);
@@ -257,7 +251,6 @@ export class RegisterComponent implements OnInit {
           this.isLoading = false;
         });
     } else {
-      console.log('Formulario no válido');
       this.isValid = false;
     }
   }

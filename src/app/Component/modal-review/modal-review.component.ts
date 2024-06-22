@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
-
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
-  selector: 'app-modal-options-buttons',
+  selector: 'app-modal-review',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -19,18 +18,14 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatFormFieldModule,
   ],
-  templateUrl: './modal-options-buttons.component.html',
-  styleUrls: ['./modal-options-buttons.component.css'],
+  templateUrl: './modal-review.component.html',
+  styleUrl: './modal-review.component.css',
 })
-export class ModalOptionsButtonsComponent {
-  constructor(private router: Router) {}
-  onImage1Click() {
-  }
-
-  onImage2Click() {
-  }
-
-  register(isPatient: boolean = false): void {
-    this.router.navigate(['register'], { queryParams: { isPatient } });
+export class ModalReviewComponent {
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    public data: { comment: string; rating: string }
+  ) {
+    console.log('data', this.data);
   }
 }

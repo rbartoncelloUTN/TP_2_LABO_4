@@ -24,8 +24,8 @@ export class NavbarComponent {
     this.router.navigate(['users']);
   }
 
-  handleClickGoToAboutMe() {
-    this.router.navigate(['icecream']);
+  handleClickGoToCreateNewAppointment() {
+    this.router.navigate(['createNewAppointment']);
   }
 
   handleLogout() {

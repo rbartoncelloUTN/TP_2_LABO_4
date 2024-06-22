@@ -19,7 +19,6 @@ export class WelcomeComponent implements OnInit {
   ngOnInit(): void {
     const userData = localStorage.getItem('users') || '';
     const users = (JSON.parse(userData) as User[]) || [];
-    console.log(this.auth.getUser());
     this.userData = this.auth.getUser() as User;
   }
 }

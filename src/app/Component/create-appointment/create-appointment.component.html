@@ -1,0 +1,130 @@
+<body>
+  <div class="appointment-container">
+    <div
+      class="appointment-header"
+      [hiddenComponent]="currentUser?.rol === 'Especialista'"
+    >
+      <p class="appointment-label">Turnos para:</p>
+      <div class="appointment-details">
+        <p
+          class="patient-name"
+          [hiddenComponent]="currentUser?.rol !== 'Paciente'"
+        >
+          <span>{{ currentUser?.apellido }}, {{ currentUser?.nombre }}</span>
+        </p>
+        <div
+          class="patient-select"
+          [hiddenComponent]="currentUser?.rol !== 'Administrador'"
+        >
+          <div class="form-group">
+            <select
+              id="especialidad"
+              formControlName="especialidad"
+              class="form-control"
+              (change)="onPatientSelected($event)"
+            >
+              <option *ngFor="let patient of patients" [value]="patient.dni">
+                {{ patient?.apellido }}, {{ patient?.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="appointment-button" [hiddenComponent]="createNewAppointment">
+        <button (click)="requestAppointment()">Nuevo turno</button>
+      </div>
+    </div>
+    <div class="search-container" [hiddenComponent]="createNewAppointment">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar..."
+        [(ngModel)]="searchText"
+      />
+    </div>
+    <div class="selects-container" [hiddenComponent]="!createNewAppointment">
+      <div class="form-group">
+        <label for="specialty">Especialidad</label>
+        <select
+          id="specialty"
+          formControlName="specialty"
+          class="form-control"
+          (change)="onSpecialtySelected($event)"
+        >
+          <option *ngFor="let specialty of specialties" [value]="specialty.id">
+            {{ specialty?.name }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group" [hiddenComponent]="selectedSpecialty === null">
+        <label for="doctor">Doctores</label>
+        <select
+          id="doctor"
+          formControlName="doctor"
+          class="form-control"
+          (change)="onSpecialistSelected($event)"
+        >
+          <option *ngFor="let doctor of doctors" [value]="doctor.dni">
+            {{ doctor?.apellido }}, {{ doctor?.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div
+      class="dates-container"
+      id="datesContainer"
+      [hiddenComponent]="!selectedSpecialist"
+    >
+      <div
+        *ngFor="let date of dates"
+        class="date-item"
+        (click)="handleDateClick(date)"
+      >
+        <div class="date-content">
+          <div class="date-weekday">{{ date.weekDay }}</div>
+          <div class="date-date">{{ date.date }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="appointments-container">
+      <div class="column">
+        <div
+          *ngFor="let hour of appointmetOptions.slice(0, halfLength)"
+          class="appointment-item"
+          (click)="handleHourClick(hour)"
+        >
+          {{ hour }}
+        </div>
+      </div>
+      <div class="column">
+        <div
+          *ngFor="
+            let hour of appointmetOptions.slice(halfLength, halfLength * 2)
+          "
+          class="appointment-item"
+          (click)="handleHourClick(hour)"
+        >
+          {{ hour }}
+        </div>
+      </div>
+      <div class="column">
+        <div
+          *ngFor="let hour of appointmetOptions.slice(halfLength * 2)"
+          class="appointment-item"
+          (click)="handleHourClick(hour)"
+        >
+          {{ hour }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-appointment-list
+    [appointments]="
+      appointments
+        | filter
+          : searchText
+          : (patientSelected ? patientSelected : currentUser)
+    "
+    [hiddenComponent]="createNewAppointment"
+  ></app-appointment-list>
+</body>

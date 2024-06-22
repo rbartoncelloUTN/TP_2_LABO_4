@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Agregue un comentario</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field>
+    <input matInput [(ngModel)]="comment" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="comment" cdkFocusInitial>
+    Aceptar
+  </button>
+</mat-dialog-actions>

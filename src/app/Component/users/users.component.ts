@@ -22,7 +22,6 @@ export class UsersComponent implements OnInit {
     this.users = (JSON.parse(userData) as User[]) || [];
   }
   addAdmin(): void {
-    console.log('click');
     this.router.navigate(['register'], { queryParams: { isAdmin: true } });
   }
 }
