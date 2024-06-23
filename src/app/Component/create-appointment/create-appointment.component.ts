@@ -7,7 +7,12 @@ import { UserService } from '../../services/User/user.service';
 import { Roles, User } from '../../Interfaces/user';
 import { AuthService } from '../../services/Auth/auth.service';
 import { HideComponentDirective } from '../../directives/hide-component.directive';
-import { Firestore, collectionData } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collectionData,
+  doc,
+  getDoc,
+} from '@angular/fire/firestore';
 import { Timestamp, collection } from 'firebase/firestore';
 import {
   generateHours,
@@ -65,7 +70,7 @@ export class CreateAppointmentComponent implements OnInit {
   appointment: Appointment | undefined = undefined;
   appointments: Appointment[] | [] = [];
 
-  availableTimes: string[] = [];
+  availableTimes: { day: string; hours: [] }[] = [];
   constructor(private router: Router, private firestore: Firestore) {
     this.loadSpecialties();
     this.loadAppointments();
@@ -163,6 +168,7 @@ export class CreateAppointmentComponent implements OnInit {
     this.selectedSpecialist = this.doctors?.find(
       (specialty) => specialty.dni.toString() === selectedValue
     );
+    this.loadAppointmentsAvaiblesBySpecialist();
   }
   requestAppointment(): void {
     this.createNewAppointment = true;
@@ -187,17 +193,29 @@ export class CreateAppointmentComponent implements OnInit {
           `${appointment.date
             .getHours()
             .toString()
-            .padStart(2, '0')}:${appointment.date.getMinutes()}`
+            .padStart(2, '0')}:${appointment.date
+            .getMinutes()
+            .toString()
+            .padStart(2, '0')}`
       );
+
+    const hoursAvailable = this.availableTimes.find(
+      (time) => time.day === `${date.day}/${date.month}/2024`
+    )?.hours;
+
     this.appointmetOptions = generateHours(
       8,
       date.weekDay === 'sábado' ? 14 : 19
-    ).filter(
-      (hour) =>
-        !selectedSpecialistAppointments.some(
-          (appointment) => hour === appointment
-        )
-    );
+    )
+      .filter(
+        (hour) =>
+          !selectedSpecialistAppointments.some(
+            (appointment) => hour === appointment
+          )
+      )
+      .filter((hour) =>
+        hoursAvailable?.some((appointment) => hour === appointment)
+      );
     this.selectedDate = date;
   }
   get halfLength(): number {
@@ -240,5 +258,31 @@ export class CreateAppointmentComponent implements OnInit {
       this.usersService.getUsersByRol('patients');
       this.usersService.getUsersByRol('doctors');
     });
+  }
+
+  async loadAppointmentsAvaiblesBySpecialist() {
+    if (!this.selectedSpecialist) {
+      console.error('User not found');
+      return;
+    }
+
+    const docRef = doc(
+      this.firestore,
+      'availablesAppointments',
+      `${this.selectedSpecialist.dni}`
+    );
+
+    try {
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data() as { dates: [{ day: string; hours: [] }] };
+        this.availableTimes = data?.dates || [];
+      } else {
+        console.log('No such document!');
+      }
+    } catch (error) {
+      console.error('Error fetching document:', error);
+    }
   }
 }

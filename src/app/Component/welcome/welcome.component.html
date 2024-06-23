@@ -7,7 +7,12 @@
       <p><strong>DNI:</strong> {{ userData.dni }}</p>
       <p><strong>Edad:</strong> {{ userData.edad }}</p>
       <p><strong>Email:</strong> {{ userData.mail }}</p>
-      <p><strong>Obra Social:</strong> {{ userData.obraSocial }}</p>
+      <p [hiddenComponent]="userData.rol !== 'Paciente'">
+        <strong>Obra Social:</strong> {{ userData.obraSocial }}
+      </p>
+      <div [hiddenComponent]="userData.rol !== 'Especialista'">
+        <button (click)="handleSelectAvaiblesDays()">Mis horarios</button>
+      </div>
     </div>
   </div>
 </div>

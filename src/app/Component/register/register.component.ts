@@ -11,7 +11,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  signOut,
 } from 'firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { LoaderComponent } from '../loader/loader.component';
