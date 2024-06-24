@@ -1,0 +1,102 @@
+.appointment-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+}
+
+.appointment-card .info {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-card .info div {
+  margin-bottom: 10px;
+}
+
+.appointment-card .specialty {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+.appointment-card .specialist-name {
+  font-size: 16px;
+  color: #666;
+}
+
+.appointment-card .date-time {
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+}
+
+.appointment-card .status {
+  font-size: 20px;
+  font-weight: bold;
+  color: #01030a;
+  text-align: center;
+}
+
+.appointment-card .btn {
+  font-size: 14px;
+  color: #e53935;
+  text-align: right;
+  margin-top: 10px;
+}
+
+.appointment-card .separator {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 10px 0;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  gap: 25px;
+  padding: 10px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: space-around;
+}
+
+.button-container .btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container .btn:hover {
+  background-color: #0056b3;
+}
+
+.button-container .btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.button-container .btn-cancel {
+  background-color: #dc3545;
+}
+
+.button-container .btn-cancel:hover {
+  background-color: #c82333;
+}

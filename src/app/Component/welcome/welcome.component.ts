@@ -1,21 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { GithubService } from '../../services/github/github.service';
-import { IGitHub } from '../../Interfaces/github';
+import { Component, OnInit, inject } from '@angular/core';
+import { User } from '../../Interfaces/user';
+import { AuthService } from '../../services/Auth/auth.service';
+import { HideComponentDirective } from '../../directives/hide-component.directive';
+import { SelectAvailableDaysComponent } from '../select-available-days/select-available-days.component';
+import { Router } from '@angular/router';
+import { routes } from '../../app.routes';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [],
+  imports: [HideComponentDirective, SelectAvailableDaysComponent],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css',
 })
-export class WelcomeComponent implements OnInit {
-  public userData!: IGitHub;
-  constructor(private githubService: GithubService) {}
+export class MyProfileComponent implements OnInit {
+  auth = inject(AuthService);
+  route = inject(Router);
+
+  userData!: User;
   ngOnInit(): void {
-    this.githubService.getData().subscribe((data) => {
-      //console.log(data);
-      this.userData = data;
-    });
+    this.userData = this.auth.getUser() as User;
+  }
+
+  handleSelectAvaiblesDays(): void {
+    this.route.navigate(['availableDays']);
   }
 }

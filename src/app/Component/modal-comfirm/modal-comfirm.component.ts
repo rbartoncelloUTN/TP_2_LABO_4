@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 @Component({
-  selector: 'app-dialog-info',
+  selector: 'app-modal-comfirm',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -18,9 +17,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     MatFormFieldModule,
   ],
-  templateUrl: './dialog-info.component.html',
-  styleUrl: './dialog-info.component.css',
+  templateUrl: './modal-comfirm.component.html',
+  styleUrl: './modal-comfirm.component.css',
 })
-export class DialogInfoComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { title: string, message: string, isError: boolean }) {}
-}
+export class ModalComfirmComponent {}

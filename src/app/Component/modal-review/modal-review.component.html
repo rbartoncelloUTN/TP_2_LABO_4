@@ -1,0 +1,17 @@
+<div style="display: flex; flex-direction: column; min-width: 200px">
+  <h2 mat-dialog-title>Reseña</h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="review-container">
+      <div class="rating">
+        {{ data.rating }}
+      </div>
+      <mat-label>Comentario</mat-label>
+      <div class="comment">
+        {{ data.comment }}
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Salir</button>
+  </mat-dialog-actions>
+</div>

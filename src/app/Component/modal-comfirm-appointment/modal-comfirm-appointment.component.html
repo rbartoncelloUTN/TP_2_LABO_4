@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Se ha creado el siguiente turno</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field>
+    <mat-label>Fecha del Turno</mat-label>
+    <input
+      matInput
+      [value]="data.appointment.date | date : 'dd/MM/yyyy HH:mm'"
+    />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Especialista</mat-label>
+    <input matInput [value]="data.appointment.specialistName" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Especialidad</mat-label>
+    <input matInput [value]="data.appointment.specialty" />
+  </mat-form-field>
+</mat-dialog-content>
+
+<h2 mat-dialog-title>¿Desea confirmar?</h2>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Aceptar</button>
+</mat-dialog-actions>

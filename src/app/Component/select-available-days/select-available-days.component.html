@@ -1,0 +1,50 @@
+<div>
+  <app-loader [isLoading]="isLoading"></app-loader>
+  <div class="dates-container" id="datesContainer">
+    <div
+      *ngFor="let date of dates"
+      class="date-item"
+      (click)="handleDateClick(date)"
+    >
+      <div class="date-content">
+        <div class="date-weekday">{{ date.weekDay }}</div>
+        <div class="date-date">{{ date.date }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="appointments-container">
+    <div class="column">
+      <div
+        *ngFor="let hour of appointmetOptions.slice(0, halfLength)"
+        class="appointment-item"
+        [class.selected]="hour.selected"
+        (click)="handleHourClick(hour)"
+      >
+        {{ hour.hour }}
+      </div>
+    </div>
+    <div class="column">
+      <div
+        *ngFor="let hour of appointmetOptions.slice(halfLength, halfLength * 2)"
+        class="appointment-item"
+        [class.selected]="hour.selected"
+        (click)="handleHourClick(hour)"
+      >
+        {{ hour.hour }}
+      </div>
+    </div>
+    <div class="column">
+      <div
+        *ngFor="let hour of appointmetOptions.slice(halfLength * 2)"
+        class="appointment-item"
+        [class.selected]="hour.selected"
+        (click)="handleHourClick(hour)"
+      >
+        {{ hour.hour }}
+      </div>
+    </div>
+  </div>
+  <div class="buttonContainer" [hiddenComponent]="!isSomeHourSelected()">
+    <button (click)="saveSelections()">Confirmar</button>
+  </div>
+</div>
