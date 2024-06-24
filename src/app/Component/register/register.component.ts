@@ -118,23 +118,32 @@ export class RegisterComponent implements OnInit {
     let newSpecialty = '';
 
     dialogRef.afterClosed().subscribe((result) => {
-      newSpecialty = result;
-      const index = this.especialidades.findIndex(
-        (especialidad) =>
-          especialidad.name.toLowerCase() === newSpecialty.toLowerCase()
-      );
-      if (index >= 0) {
-        this.flagError = true;
-        this.msjError = 'La especialidad ya existe';
-        const dialogInfoRef = this.dialog.open(DialogInfoComponent, {
-          data: {
-            title: 'Error',
-            message: 'La especialidad ya existe',
-            isError: true,
-          },
-        });
-      } else {
-        this.especialidades.push({ name: newSpecialty });
+      if (result) {
+        newSpecialty = result;
+        const index = this.especialidades.findIndex(
+          (especialidad) =>
+            especialidad.name.toLowerCase() === newSpecialty.toLowerCase()
+        );
+        if (index >= 0) {
+          this.flagError = true;
+          this.msjError = 'La especialidad ya existe';
+          this.dialog.open(DialogInfoComponent, {
+            data: {
+              title: 'Error',
+              message: 'La especialidad ya existe',
+              isError: true,
+            },
+          });
+        } else {
+          this.especialidades.push({ name: newSpecialty });
+          this.dialog.open(DialogInfoComponent, {
+            data: {
+              title: 'La especialidad fue agregada',
+            },
+          });
+          let col = collection(this.firestore, 'especialidades');
+          addDoc(col, { name: newSpecialty, id: this.especialidades.length });
+        }
       }
     });
   }

@@ -1,39 +1,101 @@
 <!-- src/app/user-list/user-list.component.html -->
 
 <div class="container">
+  <app-loader [isLoading]="isLoading"></app-loader>
   <div class="btn-container">
     <button class="btn btn-primary" (click)="addAdmin()">
       Nuevo Administrador
     </button>
   </div>
   <div class="title-container">
-    <h1>Lista de Usuarios</h1>
+    <h1>Lista de Especialistas</h1>
   </div>
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th>Rol</th>
-        <th>Correo</th>
         <th>DNI</th>
         <th>Apellido</th>
         <th>Nombre</th>
-        <th>Edad</th>
         <th>Especialidad</th>
-        <th>Obra Social</th>
         <th>Habilitado</th>
         <th>Aprobado</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.rol }}</td>
+      <tr
+        *ngFor="let user of users.doctors"
+        [hiddenComponent]="user.rol !== 'Especialista'"
+      >
+        <td>{{ user.dni }}</td>
+        <td>{{ user.apellido }}</td>
+        <td>{{ user.nombre }}</td>
+        <td>{{ user.especialidad }}</td>
+        <td
+          [innerHTML]="user.enabled | booleanToButton"
+          (click)="
+            updateUserEnabledStatus(user.dni, !user.enabled, !!user.verificated)
+          "
+        ></td>
+        <td
+          [innerHTML]="user.verificated | booleanToButton"
+          (click)="
+            updateUserEnabledStatus(user.dni, !!user.enabled, !user.verificated)
+          "
+        ></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="title-container">
+    <h1>Lista de Pacientes</h1>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Correo</th>
+        <th>DNI</th>
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Obra Social</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let user of users.patients"
+        [hiddenComponent]="user.rol !== 'Paciente'"
+      >
         <td>{{ user.mail }}</td>
         <td>{{ user.dni }}</td>
         <td>{{ user.apellido }}</td>
         <td>{{ user.nombre }}</td>
         <td>{{ user.edad }}</td>
-        <td>{{ user.especialidad }}</td>
         <td>{{ user.obraSocial }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="title-container">
+    <h1>Lista de Administradores</h1>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Correo</th>
+        <th>DNI</th>
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Habilitado</th>
+        <th>Aprobado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let user of users.administrators"
+        [hiddenComponent]="user.rol !== 'Administrador'"
+      >
+        <td>{{ user.mail }}</td>
+        <td>{{ user.dni }}</td>
+        <td>{{ user.apellido }}</td>
+        <td>{{ user.nombre }}</td>
         <td [innerHTML]="user.enabled | booleanToButton"></td>
         <td [innerHTML]="user.verificated | booleanToButton"></td>
       </tr>

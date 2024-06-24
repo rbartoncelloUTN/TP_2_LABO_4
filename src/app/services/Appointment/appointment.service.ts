@@ -1,4 +1,4 @@
-import { Injectable, Inject, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -13,7 +13,6 @@ import {
   setDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Appointment } from '../../Interfaces/Appointment ';
 import {
   CollectionReference,
