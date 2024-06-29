@@ -53,15 +53,35 @@ export class LoginComponent implements OnInit {
 
     const observable = collectionData(col);
 
-    observable.subscribe((data) => {
+    observable.subscribe(async (data) => {
       const dataUsers = data as User[];
       this.users = [...this.users, ...dataUsers];
       this.users = this.users.filter(
         (item, index, self) =>
           index === self.findIndex((t) => t.mail === item.mail)
       );
+      this.users = await Promise.all(
+        this.users.map(async (item) => {
+          const image = await this.getImages(item.mail);
+          return { ...item, perfilImagen1: image[0] };
+        })
+      );
       localStorage.setItem('users', JSON.stringify(this.users));
     });
+  }
+
+  getTopThreeOfEachRole(): User[] {
+    const roles = ['Especialista', 'Paciente', 'Administrador'] as const;
+
+    let result: User[] = [];
+
+    roles.forEach((role) => {
+      const usersOfRole = this.users.filter((user) => user.rol === role);
+      const topThreeUsersOfRole = usersOfRole.slice(0, 3);
+      result = [...result, ...topThreeUsersOfRole];
+    });
+
+    return result;
   }
 
   ngOnInit(): void {
@@ -104,7 +124,7 @@ export class LoginComponent implements OnInit {
           perfilImagen2: urls[1] || null,
         };
       }
-      return urls; // Aquí puedes hacer algo con las URLs, como almacenarlas en una variable de estado
+      return urls;
     } catch (err) {
       console.error(err);
       return [];

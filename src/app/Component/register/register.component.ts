@@ -23,6 +23,7 @@ import { DialogTextComponent } from '../dialog-text/dialog-text.component';
 import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
 import { Storage, ref } from '@angular/fire/storage';
 import { uploadBytes } from 'firebase/storage';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-register',
@@ -33,6 +34,7 @@ import { uploadBytes } from 'firebase/storage';
     ReactiveFormsModule,
     LoaderComponent,
     HideComponentDirective,
+    RecaptchaModule,
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
@@ -66,6 +68,10 @@ export class RegisterComponent implements OnInit {
     observable.subscribe((data) => {
       this.especialidades = data;
     });
+  }
+
+  executeRecaptcha(token: any){
+    console.log(token);
   }
 
   ngOnInit(): void {
