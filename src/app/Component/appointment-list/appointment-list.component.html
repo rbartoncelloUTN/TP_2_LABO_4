@@ -1,4 +1,5 @@
-<body>
+<app-loader [isLoading]="isLoading"></app-loader>
+<body [hiddenComponent]="currentUser?.rol !== 'Paciente'">
   <div *ngFor="let appointment of appointments" class="appointment-card">
     <div class="info">
       <div class="specialist-name">
@@ -62,41 +63,6 @@
       </div>
       <div class="button-container">
         <button
-          class="btn"
-          [hiddenComponent]="
-            currentUser?.rol !== 'Especialista' ||
-            hideOptionsWithSpecialityRol(appointment)
-          "
-          (click)="handleAcceptAppointment(appointment)"
-        >
-          Aceptar
-        </button>
-        <button
-          class="btn"
-          [hiddenComponent]="
-            currentUser?.rol !== 'Especialista' ||
-            hideOptionsWithSpecialityRol(appointment)
-          "
-          (click)="handleRejectedAppointment(appointment)"
-        >
-          Rechazar
-        </button>
-        <button
-          class="btn"
-          [hiddenComponent]="
-            currentUser?.rol !== 'Especialista' ||
-            !(
-              currentUser?.rol === 'Especialista' &&
-              appointment.status === 'Aceptado'
-            )
-          "
-          (click)="handleFinishedAppointment(appointment)"
-        >
-          Finalizar
-        </button>
-      </div>
-      <div class="button-container">
-        <button
           class="btn btn-cancel"
           [hiddenComponent]="
             appointment.status === 'Cancelado' ||
@@ -112,4 +78,115 @@
       </div>
     </div>
   </div>
+</body>
+<body [hiddenComponent]="currentUser?.rol === 'Paciente'">
+  <table class="custom-appointment-table">
+    <thead>
+      <tr>
+        <th class="custom-th">Especialista</th>
+        <th class="custom-th">Especialidad</th>
+        <th class="custom-th">Día y Hora</th>
+        <th class="custom-th">Paciente</th>
+        <th class="custom-th">Estado</th>
+        <th class="custom-th">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let appointment of appointments"
+        class="custom-appointment-row"
+      >
+        <td class="custom-td">{{ appointment.specialistName }}</td>
+        <td class="custom-td">
+          {{ appointment.specialty.toLocaleUpperCase() }}
+        </td>
+        <td class="custom-td">
+          {{ appointment.date | date : "dd/MM/yyyy HH:mm" }}
+        </td>
+        <td class="custom-td">
+          {{ appointment.patientId | findPatient : appointment.patientId }}
+        </td>
+        <td class="custom-td">{{ appointment.status }}</td>
+        <td class="custom-td">
+          <div class="custom-actions">
+            <div
+              class="custom-btn-reseña"
+              [hiddenComponent]="!appointment.review?.comment"
+              (click)="handleReviewAppointment(appointment)"
+            >
+              Reseña
+            </div>
+            <div
+              class="custom-btn"
+              [hiddenComponent]="
+                !(
+                  !!appointment.review?.comment &&
+                  appointment.status === 'Realizado' &&
+                  currentUser?.rol === 'Paciente'
+                )
+              "
+            >
+              Encuesta
+            </div>
+            <div
+              class="custom-btn"
+              [hiddenComponent]="
+                appointment.status !== 'Realizado' ||
+                currentUser?.rol !== 'Paciente'
+              "
+              (click)="handleCommentAppointment(appointment)"
+            >
+              Calificar
+            </div>
+            <button
+              class="custom-btn"
+              [hiddenComponent]="
+                currentUser?.rol !== 'Especialista' ||
+                hideOptionsWithSpecialityRol(appointment)
+              "
+              (click)="handleAcceptAppointment(appointment)"
+            >
+              Aceptar
+            </button>
+            <button
+              class="custom-btn"
+              [hiddenComponent]="
+                currentUser?.rol !== 'Especialista' ||
+                hideOptionsWithSpecialityRol(appointment)
+              "
+              (click)="handleRejectedAppointment(appointment)"
+            >
+              Rechazar
+            </button>
+            <button
+              class="custom-btn"
+              [hiddenComponent]="
+                currentUser?.rol !== 'Especialista' ||
+                !(
+                  currentUser?.rol === 'Especialista' &&
+                  appointment.status === 'Aceptado'
+                )
+              "
+              (click)="handleFinishedAppointment(appointment)"
+            >
+              Finalizar
+            </button>
+            <button
+              class="custom-btn custom-btn-cancel"
+              [hiddenComponent]="
+                appointment.status === 'Cancelado' ||
+                (currentUser?.rol === 'Paciente' &&
+                  appointment.status === 'Realizado') ||
+                hideOptionsWithSpecialityRol(appointment) ||
+                hideOptionsWithAdminRol(appointment)
+              "
+              (click)="handleCancelAppointment(appointment)"
+            >
+              Cancelar
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>

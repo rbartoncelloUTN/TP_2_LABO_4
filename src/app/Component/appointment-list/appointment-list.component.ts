@@ -10,7 +10,10 @@ import { ModalCommentComponent } from '../modal-comment/modal-comment.component'
 import { MatDialog } from '@angular/material/dialog';
 import { ModalReviewComponent } from '../modal-review/modal-review.component';
 import { FindPatientPipe } from '../../pipes/find-patient.pipe';
-import { Roles } from '../../Interfaces/user';
+import { Roles, User } from '../../Interfaces/user';
+import { ModalFormComponent } from '../modal-form/modal-form.component';
+import { Firestore, collection, doc, setDoc } from '@angular/fire/firestore';
+import { LoaderComponent } from '../loader/loader.component';
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
@@ -20,6 +23,7 @@ import { Roles } from '../../Interfaces/user';
     MatFormFieldModule,
     HideComponentDirective,
     FindPatientPipe,
+    LoaderComponent,
   ],
   templateUrl: './appointment-list.component.html',
   styleUrl: './appointment-list.component.css',
@@ -29,17 +33,26 @@ export class AppointmentListComponent {
   readonly dialog = inject(MatDialog);
   authService = inject(AuthService);
   appointmentService = inject(AppointmentService);
+  firestore = inject(Firestore);
+  isLoading = false;
+
   currentUser = this.authService.getUser();
   appointmentFocused: Appointment | undefined = undefined;
+  patients: User[] = [];
 
-  constructor() {}
+  constructor() {
+    this.patients = this.authService
+      .getUsers()
+      .filter((user) => (user.rol = Roles.PATIENT));
+  }
 
   hideOptionsWithSpecialityRol(appointment: Appointment): boolean {
     return (
       this.currentUser?.rol === Roles.DOCTOR &&
-      (appointment.status === 'Aceptado' ||
-        appointment.status === 'Realizado' ||
-        appointment.status === 'Rechazado')
+      (appointment.status === Status.ACCEPTED ||
+        appointment.status === Status.COMPLETED ||
+        appointment.status === Status.REJECTED ||
+        appointment.status === Status.CANCELED)
     );
   }
 
@@ -70,7 +83,7 @@ export class AppointmentListComponent {
   handleFinishedAppointment(appointment: Appointment) {
     this.appointmentFocused = appointment;
     this.appointmentFocused.status = Status.COMPLETED;
-    this.openCommentsDialog();
+    this.openFormDialog('500ms', '500ms');
   }
 
   handleReviewAppointment(appointment: Appointment) {
@@ -103,12 +116,53 @@ export class AppointmentListComponent {
     const dialogRef = this.dialog.open(ModalCommentComponent);
 
     dialogRef.afterClosed().subscribe((result: string) => {
+      this.isLoading = true;
       if (this.appointmentFocused) {
         this.appointmentFocused.review = { comment: result, rating: null };
-        this.appointmentService.updateAppointment(
-          `${this.appointmentFocused?.id}`,
-          this.appointmentFocused
-        );
+        this.appointmentService
+          .updateAppointment(
+            `${this.appointmentFocused?.id}`,
+            this.appointmentFocused
+          )
+          .finally(() => {
+            this.isLoading = false;
+          });
+      }
+    });
+  }
+
+  openFormDialog(
+    enterAnimationDuration: string,
+    exitAnimationDuration: string
+  ): void {
+    const patient = this.patients.find(
+      (patient) => patient.dni.toString() === this.appointmentFocused?.patientId
+    );
+    const dialogRef = this.dialog.open(ModalFormComponent, {
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: patient,
+    });
+
+    dialogRef.afterClosed().subscribe((result: string) => {
+      this.isLoading = true;
+      if (result) {
+        try {
+          const collectionRef = collection(this.firestore, 'historyRecord');
+
+          const docRef = doc(collectionRef, `${new Date().getTime()}`);
+          setDoc(docRef, {
+            patientId: patient?.dni,
+            doctorId: this.appointmentFocused?.specialistId,
+            appointmentId: this.appointmentFocused?.id,
+            record: result,
+          }).finally(() => {
+            this.isLoading = false;
+            this.openCommentsDialog();
+          });
+        } catch (e) {
+          this.isLoading = false;
+        }
       }
     });
   }

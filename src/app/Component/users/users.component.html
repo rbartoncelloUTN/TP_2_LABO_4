@@ -2,15 +2,18 @@
 
 <div class="container">
   <app-loader [isLoading]="isLoading"></app-loader>
-  <div class="btn-container">
+  <div class="btn-container" [hiddenComponent]="user.rol === 'Especialista'">
     <button class="btn btn-primary" (click)="addAdmin()">
       Nuevo Administrador
     </button>
   </div>
-  <div class="title-container">
+  <div class="title-container" [hiddenComponent]="user.rol === 'Especialista'">
     <h1>Lista de Especialistas</h1>
   </div>
-  <table class="table table-bordered">
+  <table
+    class="table table-bordered"
+    [hiddenComponent]="user.rol === 'Especialista'"
+  >
     <thead>
       <tr>
         <th>DNI</th>
@@ -45,8 +48,18 @@
       </tr>
     </tbody>
   </table>
-  <div class="title-container">
-    <h1>Lista de Pacientes</h1>
+  <div style="display: flex; align-items: center; width: 80%">
+    <div class="title-container">
+      <h1>Lista de Pacientes Atendidos</h1>
+    </div>
+    <div
+      [hiddenComponent]="user.rol !== 'Administrador'"
+      class="button-container"
+    >
+      <button mat-raised-button color="primary" (click)="exportDataToExcel()">
+        Descargar
+      </button>
+    </div>
   </div>
   <table class="table table-bordered">
     <thead>
@@ -73,10 +86,13 @@
       </tr>
     </tbody>
   </table>
-  <div class="title-container">
+  <div class="title-container" [hiddenComponent]="user.rol === 'Especialista'">
     <h1>Lista de Administradores</h1>
   </div>
-  <table class="table table-bordered">
+  <table
+    class="table table-bordered"
+    [hiddenComponent]="user.rol === 'Especialista'"
+  >
     <thead>
       <tr>
         <th>Correo</th>

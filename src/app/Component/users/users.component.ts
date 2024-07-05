@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../Interfaces/user';
+import { Roles, User } from '../../Interfaces/user';
 import { CommonModule } from '@angular/common';
 import { BooleanToButtonPipe } from '../../pipes/boolean-to-button.pipe';
 import { Router } from '@angular/router';
@@ -15,6 +15,10 @@ import {
 } from '@angular/fire/firestore';
 import { UserService } from '../../services/User/user.service';
 import { LoaderComponent } from '../loader/loader.component';
+import { AuthService } from '../../services/Auth/auth.service';
+import { Appointment, Status } from '../../Interfaces/Appointment ';
+import { AppointmentService } from '../../services/Appointment/appointment.service';
+import { ExcelService } from '../../services/excel.service';
 
 @Component({
   selector: 'app-users',
@@ -35,14 +39,30 @@ export class UsersComponent implements OnInit {
     administrators: User[];
   } = { doctors: [], administrators: [], patients: [] };
   isLoading = false;
+  user!: User;
+  appointments?: Appointment[] | [];
 
   constructor(
     private router: Router,
     private firestore: Firestore,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService,
+    private appointmentService: AppointmentService,
+    private excelService: ExcelService
   ) {}
 
   ngOnInit(): void {
+    this.user = this.authService.getUser() as User;
+    this.appointmentService.getAppointments().subscribe((appointments) => {
+      this.appointments = appointments.filter(
+        (appointments) =>
+          (this.user.rol === Roles.DOCTOR &&
+            appointments.specialistId.toString() === this.user.dni.toString() &&
+            appointments.status === Status.COMPLETED) ||
+          (appointments.status === Status.COMPLETED &&
+            this.user.rol === Roles.ADMIN)
+      );
+    });
     Promise.all([
       this.userService.getUsers('administrators'),
       this.userService.getUsers('doctors'),
@@ -50,6 +70,9 @@ export class UsersComponent implements OnInit {
     ])
       .then(() => {
         this.users = this.userService.users;
+        this.users.patients = this.users.patients.filter((p) =>
+          this.appointments?.some((a) => a.patientId === p.dni.toString())
+        );
         this.isLoading = false;
       })
       .catch((error) => {
@@ -101,5 +124,9 @@ export class UsersComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+  exportDataToExcel(): void {
+    const data = this.users.patients;
+    this.excelService.exportToExcel(data, 'pacientes', 'patientsData');
   }
 }

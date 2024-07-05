@@ -152,7 +152,9 @@ export class SelectAvailableDaysComponent implements OnInit {
             dates: [
               ...this.dateSaved,
               {
-                day: `${this.dateSelected?.day}/${this.dateSelected?.month}/2024`,
+                day: `${this.dateSelected?.day}/${
+                  Number(this.dateSelected?.month) + 1
+                }/2024`,
                 hours: selectedItemIds,
               },
             ],

@@ -1,18 +1,88 @@
 <div class="welcome-screen">
+  <h2>Mi Perfil</h2>
   <div class="profile-card">
-    <img class="avatar" [src]="userData.perfilImagen1" alt="Avatar" />
-    <h2>{{ userData.nombre }} {{ userData.apellido }}</h2>
-    <p class="specialty">{{ userData.especialidad }}</p>
-    <div class="user-info">
-      <p><strong>DNI:</strong> {{ userData.dni }}</p>
-      <p><strong>Edad:</strong> {{ userData.edad }}</p>
-      <p><strong>Email:</strong> {{ userData.mail }}</p>
-      <p [hiddenComponent]="userData.rol !== 'Paciente'">
-        <strong>Obra Social:</strong> {{ userData.obraSocial }}
-      </p>
-      <div [hiddenComponent]="userData.rol !== 'Especialista'">
-        <button (click)="handleSelectAvaiblesDays()">Mis horarios</button>
+    <div>
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 15px;
+          padding: 10px;
+          gap: 10px;
+        "
+      >
+        <img class="avatar" [src]="userData.perfilImagen1" alt="Avatar" />
+        <img
+          [hiddenComponent]="userData.rol !== 'Paciente'"
+          class="avatar"
+          [src]="userData.perfilImagen2"
+          alt="Avatar"
+        />
       </div>
     </div>
+    <div class="user-info">
+      <div class="user-dettail">
+        Nombre y Apellido:
+        <span class="user-data"
+          >{{ userData.nombre }} {{ userData.apellido }}</span
+        >
+      </div>
+      <div class="user-dettail">
+        Edad:
+        <span class="user-data">{{ userData.edad }}</span>
+      </div>
+      <div class="user-dettail">
+        DNI:
+        <span class="user-data">{{ userData.dni }}</span>
+      </div>
+    </div>
+    <div class="user-info">
+      <div class="user-dettail">
+        Email:
+        <span class="user-data">{{ userData.mail }}</span>
+      </div>
+      <div class="user-dettail" [hiddenComponent]="userData.rol === 'Paciente'">
+        Especialidad/es:
+        <span class="user-data">{{ userData.especialidades }}</span>
+      </div>
+      <div class="user-dettail" [hiddenComponent]="userData.rol !== 'Paciente'">
+        Obra Social:
+        <span class="user-data">{{ userData.obraSocial }}</span>
+      </div>
+    </div>
+  </div>
+  <div [hiddenComponent]="userData.rol !== 'Especialista'">
+    <button (click)="handleSelectAvaiblesDays()">Mis horarios</button>
+  </div>
+  <div
+    class="table-container"
+    [hiddenComponent]="userData.rol === 'Especialista'"
+  >
+    <h2>Historial de turnos</h2>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Especialista</th>
+          <th>Especialidad</th>
+          <th>Temperatura</th>
+          <th>Presion</th>
+          <th>Peso</th>
+          <th>Altura</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of info">
+          <td>{{ appointment.date | date : "dd/MM/yyyy HH:mm" }}</td>
+          <td>{{ appointment.specialistName }}</td>
+          <td>{{ appointment.specialty }}</td>
+          <td>{{ appointment?.historical.temperatura }}</td>
+          <td>{{ appointment?.historical.presion }}</td>
+          <td>{{ appointment?.historical.peso }}</td>
+          <td>{{ appointment?.historical.altura }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

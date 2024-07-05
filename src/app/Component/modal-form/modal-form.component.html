@@ -1,0 +1,30 @@
+<h2 mat-dialog-title class="dialog-title">Información del Paciente</h2>
+<h3 mat-dialog-title class="dialog-sub-title">
+  {{ patient.apellido }}, {{ patient.nombre }}
+</h3>
+<mat-dialog-content class="dialog-content">
+  <p class="form-description">Complete los siguientes campos:</p>
+  <mat-form-field class="form-field">
+    <mat-label>Altura (cm)</mat-label>
+    <input matInput type="number" [(ngModel)]="altura" />
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <mat-label>Peso (kg)</mat-label>
+    <input matInput type="number" [(ngModel)]="peso" />
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <mat-label>Temperatura (°C)</mat-label>
+    <input matInput type="number" [(ngModel)]="temperatura" />
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <mat-label>Presión (mmHg)</mat-label>
+    <input matInput type="number" [(ngModel)]="presion" />
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <mat-label>{{ dynamic_key }}</mat-label>
+    <input matInput [(ngModel)]="dynamic" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="closeDialog()" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>

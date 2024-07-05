@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnChanges, inject } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,16 +21,35 @@ import { User } from '../../Interfaces/user';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnChanges {
   authService = inject(AuthService);
-  user!: User;
+  user!: any;
+  show = false;
 
-  constructor(private router: Router, public auth: Auth) {}
+  constructor(private router: Router, public auth: Auth) {
+    this.auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.show = true;
+      } else {
+        this.show = false;
+      }
+    });
+  }
+  ngOnChanges(): void {
+    console.log('Usuario en NavbarComponent:', this.user);
+  }
 
   ngOnInit(): void {
     this.user = this.authService.getUser() as User;
+    this.auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.show = true;
+      } else {
+        this.show = false;
+      }
+    });
+    console.log('Usuario en NavbarComponent:', this.user);
   }
-
   handleClickGoToHome() {
     this.router.navigate(['welcome']);
   }

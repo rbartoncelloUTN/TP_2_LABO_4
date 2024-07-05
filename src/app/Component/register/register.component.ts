@@ -1,5 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import {
+  FormArray,
+  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
@@ -57,7 +59,8 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public auth: Auth,
-    private storege: Storage
+    private storege: Storage,
+    private fb: FormBuilder
   ) {}
 
   getEspecialidades(): void {
@@ -70,7 +73,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  executeRecaptcha(token: any){
+  executeRecaptcha(token: any) {
     console.log(token);
   }
 
@@ -100,7 +103,7 @@ export class RegisterComponent implements OnInit {
         Validators.max(100),
       ]),
       obraSocial: new FormControl('', [Validators.required]),
-      especialidad: new FormControl('', [Validators.required]),
+      especialidades: this.fb.array([]),
       mail: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [
         Validators.required,
@@ -109,6 +112,21 @@ export class RegisterComponent implements OnInit {
       perfilImagen1: new FormControl('', [Validators.required]),
       perfilImagen2: new FormControl('', [Validators.required]),
     });
+  }
+
+  onCheckboxChange(event: any) {
+    const especialidades: FormArray = this.userForm.get(
+      'especialidades'
+    ) as FormArray;
+    if (event.target.checked) {
+      especialidades.push(this.fb.control(event.target.value));
+    } else {
+      const index = especialidades.controls.findIndex(
+        (x) => x.value === event.target.value
+      );
+      especialidades.removeAt(index);
+    }
+    console.log(this.userForm.value.especialidades);
   }
 
   isError(field: string): boolean {
@@ -175,16 +193,16 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.isPatient) {
-      this.userForm.get('especialidad')?.setValidators(null);
-      this.userForm.get('especialidad')?.updateValueAndValidity();
+      this.userForm.get('especialidades')?.setValidators(null);
+      this.userForm.get('especialidades')?.updateValueAndValidity();
     } else {
       this.userForm.get('obraSocial')?.setValidators(null);
       this.userForm.get('obraSocial')?.updateValueAndValidity();
       this.userForm.get('perfilImagen2')?.setValidators(null);
       this.userForm.get('perfilImagen2')?.updateValueAndValidity();
       if (this.isAdmin) {
-        this.userForm.get('especialidad')?.setValidators(null);
-        this.userForm.get('especialidad')?.updateValueAndValidity();
+        this.userForm.get('especialidades')?.setValidators(null);
+        this.userForm.get('especialidades')?.updateValueAndValidity();
       }
     }
     if (this.userForm.valid) {
@@ -228,7 +246,7 @@ export class RegisterComponent implements OnInit {
                   rol: Roles.PATIENT,
                 }
               : {
-                  especialidad: this.userForm.value.especialidad || null,
+                  especialidades: this.userForm.value.especialidades || null,
                   enabled: true,
                   verificated: false,
                   rol: this.isAdmin ? Roles.ADMIN : Roles.DOCTOR,

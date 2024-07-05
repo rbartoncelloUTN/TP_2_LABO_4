@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
       this.users = await Promise.all(
         this.users.map(async (item) => {
           const image = await this.getImages(item.mail);
-          return { ...item, perfilImagen1: image[0] };
+          return { ...item, perfilImagen1: image[0], perfilImagen2: image[1] };
         })
       );
       localStorage.setItem('users', JSON.stringify(this.users));
@@ -137,6 +137,8 @@ export class LoginComponent implements OnInit {
       .then(async (res) => {
         const currentUser = this.users.find((user) => user.mail === this.email);
         const images = await this.getImages(currentUser?.mail);
+
+        console.log(currentUser);
 
         if (currentUser)
           this.loggedUser = {

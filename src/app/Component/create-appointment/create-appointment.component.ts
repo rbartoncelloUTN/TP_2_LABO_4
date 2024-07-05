@@ -9,13 +9,11 @@ import { AuthService } from '../../services/Auth/auth.service';
 import { HideComponentDirective } from '../../directives/hide-component.directive';
 import {
   Firestore,
-  collectionData,
   doc,
   getDoc,
 } from '@angular/fire/firestore';
-import { Timestamp, collection } from 'firebase/firestore';
+import { Timestamp, updateDoc } from 'firebase/firestore';
 import {
-  generateHours,
   getWeekdayDatesNext15Days,
   convertTimestampToDate,
 } from '../../utils/date';
@@ -50,7 +48,7 @@ export class CreateAppointmentComponent implements OnInit {
   patients?: User[];
   doctors: User[] | [] = [];
   createNewAppointment = false;
-  specialties: { id: string; name: string }[] = [];
+  specialties: string[] = [];
   selectedSpecialty: string | null = null;
   selectedSpecialist: User | undefined = undefined;
   searchText: string = '';
@@ -70,25 +68,20 @@ export class CreateAppointmentComponent implements OnInit {
   appointment: Appointment | undefined = undefined;
   appointments: Appointment[] | [] = [];
 
-  availableTimes: { day: string; hours: [] }[] = [];
+  availableTimes: { day: string; hours: string[] }[] = [];
   constructor(private router: Router, private firestore: Firestore) {
-    this.loadSpecialties();
     this.loadAppointments();
-    this.usersService.getUsersByRol('patients');
-    this.usersService.getUsersByRol('doctors');
   }
 
   ngOnInit(): void {
-    this.usersService.getUsersByRol('patients');
-    this.usersService.getUsersByRol('doctors');
+    const users = this.authService.getUsers();
     this.currentUser = this.authService.getUser();
     if (this.currentUser?.rol === Roles.PATIENT) {
       this.patientSelected = this.currentUser;
     } else {
-      this.patients = this.usersService.users.patients;
+      this.patients = users.filter((user) => user.rol === Roles.PATIENT);
     }
-    this.doctors = this.usersService.users.doctors;
-    this.loadSpecialties();
+    this.doctors = users.filter((user) => user.rol === Roles.DOCTOR);
     this.loadAppointments();
   }
 
@@ -121,7 +114,7 @@ export class CreateAppointmentComponent implements OnInit {
             this.currentUser?.rol === Roles.ADMIN
         )
         .sort((a, b) => {
-          if (a.date < b.date) {
+          if (a.date > b.date) {
             return -1;
           } else if (a.date > b.date) {
             return 1;
@@ -129,16 +122,6 @@ export class CreateAppointmentComponent implements OnInit {
             return 0;
           }
         });
-    });
-  }
-
-  loadSpecialties(): void {
-    let col = collection(this.firestore, 'especialidades');
-
-    const observable = collectionData(col);
-
-    observable.subscribe((data) => {
-      this.specialties = data as { id: string; name: string }[];
     });
   }
 
@@ -150,25 +133,27 @@ export class CreateAppointmentComponent implements OnInit {
     this.loadAppointments();
   }
 
-  onSpecialtySelected(event: Event): void {
-    this.usersService.getUsersByRol('doctors');
-    const selectedValue = (event.target as HTMLSelectElement).value;
-    this.selectedSpecialty =
-      this.specialties.find(
-        (specialty) => specialty.id.toString() === selectedValue
-      )?.name || '';
-
-    this.doctors = this.usersService.doctors?.filter(
-      (doctors) => doctors.especialidad === this.selectedSpecialty
-    );
+  onSpecialtySelected(speciality: string): void {
+    this.selectedSpecialty = speciality;
+    // this.usersService.getUsersByRol('doctors');
+    // const selectedValue = (event.target as HTMLSelectElement).value;
+    // this.selectedSpecialty =
+    //   this.specialties.find(
+    //     (specialty) => specialty.id.toString() === selectedValue
+    //   )?.name || '';
+    // this.doctors = this.usersService.doctors?.filter((doctors) =>
+    //   doctors.especialidades?.some((e) => e === this.selectedSpecialty)
+    // );
+    this.loadAppointmentsAvaiblesBySpecialist();
   }
 
-  onSpecialistSelected(event: Event): void {
-    const selectedValue = (event.target as HTMLSelectElement).value;
+  onSpecialistSelected(dni: number): void {
     this.selectedSpecialist = this.doctors?.find(
-      (specialty) => specialty.dni.toString() === selectedValue
+      (specialty) =>
+        specialty.dni === dni && this.selectedSpecialist?.dni !== dni
     );
-    this.loadAppointmentsAvaiblesBySpecialist();
+
+    this.specialties = this.selectedSpecialist?.especialidades || [];
   }
   requestAppointment(): void {
     this.createNewAppointment = true;
@@ -180,6 +165,7 @@ export class CreateAppointmentComponent implements OnInit {
     day: string;
     month: string;
   }) {
+    console.log(this.appointments);
     const selectedSpecialistAppointments = this.appointments
       .filter(
         (appointment) =>
@@ -199,23 +185,23 @@ export class CreateAppointmentComponent implements OnInit {
             .padStart(2, '0')}`
       );
 
-    const hoursAvailable = this.availableTimes.find(
-      (time) => time.day === `${date.day}/${date.month}/2024`
-    )?.hours;
+    console.log(this.availableTimes);
 
-    this.appointmetOptions = generateHours(
-      8,
-      date.weekDay === 'sábado' ? 14 : 19
-    )
-      .filter(
-        (hour) =>
-          !selectedSpecialistAppointments.some(
-            (appointment) => hour === appointment
-          )
-      )
-      .filter((hour) =>
-        hoursAvailable?.some((appointment) => hour === appointment)
-      );
+    const hoursAvailable =
+      this.availableTimes.find(
+        (time) => time.day === `${date.day}/${Number(date.month) + 1}/2024`
+      )?.hours || [];
+
+    this.appointmetOptions = hoursAvailable;
+    // .filter(
+    //   (hour) =>
+    //     !selectedSpecialistAppointments.some(
+    //       (appointment) => hour === appointment
+    //     )
+    // )
+    // .filter((hour) =>
+    //   hoursAvailable?.some((appointment) => hour === appointment)
+    // );
     this.selectedDate = date;
   }
   get halfLength(): number {
@@ -223,7 +209,7 @@ export class CreateAppointmentComponent implements OnInit {
   }
 
   handleHourClick(hour: any) {
-    const formattedDate = `${2024}-${this.selectedDate?.month}-${
+    const formattedDate = `${2024}-${Number(this.selectedDate?.month) + 1}-${
       this.selectedDate?.day
     } ${hour}`;
     this.appointment = {
@@ -237,6 +223,32 @@ export class CreateAppointmentComponent implements OnInit {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+
+    const appointmentDoc = doc(
+      this.firestore,
+      `availablesAppointments/${this.selectedSpecialist?.dni}`
+    );
+
+    console.log(this.availableTimes);
+
+    this.availableTimes = this.availableTimes.map((date) => {
+      if (
+        date.day ===
+        `${this.selectedDate?.day}/${Number(this.selectedDate?.month) + 1}/2024`
+      ) {
+        const hourFilter = date.hours.filter((h) => h !== hour);
+        return {
+          ...date,
+          hours: hourFilter,
+        };
+      }
+      return date;
+    });
+    `${this.selectedDate?.day}/${Number(this.selectedDate?.month) + 1}/2024`;
+
+    console.log(this.availableTimes);
+
+    updateDoc(appointmentDoc, { dates: this.availableTimes });
     this.openDialog();
   }
   openDialog() {
@@ -254,17 +266,17 @@ export class CreateAppointmentComponent implements OnInit {
       this.selectedSpecialist = undefined;
       this.selectedTime = '';
       this.appointmetOptions = [];
-      this.loadSpecialties();
-      this.usersService.getUsersByRol('patients');
-      this.usersService.getUsersByRol('doctors');
     });
   }
 
   async loadAppointmentsAvaiblesBySpecialist() {
+    console.log('dd');
     if (!this.selectedSpecialist) {
       console.error('User not found');
       return;
     }
+
+    console.log(this.selectedSpecialist.dni);
 
     const docRef = doc(
       this.firestore,
@@ -278,6 +290,7 @@ export class CreateAppointmentComponent implements OnInit {
       if (docSnap.exists()) {
         const data = docSnap.data() as { dates: [{ day: string; hours: [] }] };
         this.availableTimes = data?.dates || [];
+        console.log(this.availableTimes);
       } else {
         console.log('No such document!');
       }

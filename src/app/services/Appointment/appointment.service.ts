@@ -18,7 +18,9 @@ import {
   CollectionReference,
   DocumentData,
   DocumentReference,
+  Timestamp,
 } from 'firebase/firestore';
+import { convertTimestampToDate } from '../../utils/date';
 
 @Injectable({
   providedIn: 'root',

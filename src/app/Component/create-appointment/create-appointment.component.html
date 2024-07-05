@@ -42,38 +42,77 @@
         [(ngModel)]="searchText"
       />
     </div>
-    <div class="selects-container" [hiddenComponent]="!createNewAppointment">
-      <div class="form-group">
-        <label for="specialty">Especialidad</label>
-        <select
-          id="specialty"
-          formControlName="specialty"
-          class="form-control"
-          (change)="onSpecialtySelected($event)"
-        >
-          <option *ngFor="let specialty of specialties" [value]="specialty.id">
-            {{ specialty?.name }}
-          </option>
-        </select>
-      </div>
-      <div class="form-group" [hiddenComponent]="selectedSpecialty === null">
-        <label for="doctor">Doctores</label>
-        <select
-          id="doctor"
-          formControlName="doctor"
-          class="form-control"
-          (change)="onSpecialistSelected($event)"
-        >
-          <option *ngFor="let doctor of doctors" [value]="doctor.dni">
-            {{ doctor?.apellido }}, {{ doctor?.nombre }}
-          </option>
-        </select>
+    <div
+      class="dates-container"
+      id="datesContainer"
+      [hiddenComponent]="!createNewAppointment"
+    >
+      <div
+        *ngFor="let doctor of doctors"
+        class="date-item"
+        [class.selected]="doctor.dni === selectedSpecialist?.dni"
+      >
+        <div class="date-content" (click)="onSpecialistSelected(doctor.dni)">
+          <img
+            [src]="doctor.perfilImagen1"
+            style="
+              width: 100px;
+              height: 100px;
+              resize: both;
+              border-radius: 50px;
+            "
+          />
+          <div class="date-weekday">{{ doctor.apellido }}</div>
+          <div class="date-weekday">{{ doctor.nombre }}</div>
+        </div>
       </div>
     </div>
     <div
       class="dates-container"
       id="datesContainer"
       [hiddenComponent]="!selectedSpecialist"
+    >
+      <div
+        *ngFor="let specialty of specialties"
+        class="date-item"
+        [class.selected]="specialty === selectedSpecialty"
+      >
+        <div class="date-content" (click)="onSpecialtySelected(specialty)">
+          <img
+            src="../../../assets/images/medicine.png"
+            style="
+              width: 100px;
+              height: 100px;
+              resize: both;
+              border-radius: 50px;
+            "
+          />
+          <div class="date-weekday">{{ specialty }}</div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="selects-container" [hiddenComponent]="!selectedSpecialist">
+      <div class="form-group">
+        <label for="specialty">Especialidad</label>
+        <select id="specialty" formControlName="specialty" class="form-control">
+          <option *ngFor="let specialty of specialties" [value]="specialty">
+            {{ specialty }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group" [hiddenComponent]="selectedSpecialty === null">
+        <label for="doctor">Doctores</label>
+        <select id="doctor" formControlName="doctor" class="form-control">
+          <option *ngFor="let doctor of doctors" [value]="doctor.dni">
+            {{ doctor?.apellido }}, {{ doctor?.nombre }}
+          </option>
+        </select>
+      </div>
+    </div> -->
+    <div
+      class="dates-container"
+      id="datesContainer"
+      [hiddenComponent]="!selectedSpecialty"
     >
       <div
         *ngFor="let date of dates"

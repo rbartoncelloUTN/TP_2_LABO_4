@@ -18,4 +18,9 @@ export class AuthService {
     const userData = localStorage.getItem(STORAGE_KEY_SESSION) || '';
     return JSON.parse(userData) as User | undefined;
   }
+
+  getUsers(): User[] | [] {
+    const userData = localStorage.getItem('users') || '';
+    return JSON.parse(userData) as User[] | [];
+  }
 }

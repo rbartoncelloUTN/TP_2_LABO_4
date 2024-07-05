@@ -1,10 +1,12 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Appointment {
   id?: string;
   patientId?: string;
   specialistId: string;
   specialistName: string;
   specialty: string;
-  date: Date;
+  date: Date | any;
   status: Status;
   cancellationReason?: string;
   review?: {
