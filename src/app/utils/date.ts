@@ -1,13 +1,19 @@
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from 'firebase/firestore';
 
 export const getWeekdayDatesNext15Days = (): {
   weekDay: string;
   date: string;
   day: string;
   month: string;
+  dateComplete: Date;
 }[] => {
-  const dates: { weekDay: string; date: string; day: string; month: string }[] =
-    [];
+  const dates: {
+    weekDay: string;
+    date: string;
+    day: string;
+    month: string;
+    dateComplete: Date;
+  }[] = [];
   let currentDate = new Date();
   const options: Intl.DateTimeFormatOptions = {
     weekday: 'long',
@@ -29,6 +35,7 @@ export const getWeekdayDatesNext15Days = (): {
         }),
         day: currentDate.getDate().toString(),
         month: currentDate.getMonth().toString(),
+        dateComplete: currentDate,
       });
     }
   }
@@ -60,4 +67,4 @@ const formatHour = (hour: Date): string => {
 
 export const convertTimestampToDate = (timestamp: Timestamp): Date => {
   return timestamp.toDate();
-}
+};

@@ -1,0 +1,41 @@
+<div class="grid-container">
+  <div>
+    <h2>Turnos por Especialidad</h2>
+    <canvas
+      baseChart
+      [data]="specialtyChartData"
+      [options]="specialtyChartOptions"
+      chartType="bar"
+    ></canvas>
+  </div>
+
+  <div>
+    <h2>Turnos por Día</h2>
+    <canvas
+      baseChart
+      [data]="dayChartData"
+      [options]="dayChartOptions"
+      chartType="line"
+    ></canvas>
+  </div>
+
+  <div>
+    <h2>Turnos por Médico</h2>
+    <canvas
+      baseChart
+      [data]="doctorChartData"
+      [options]="doctorChartOptions"
+      chartType="pie"
+    ></canvas>
+  </div>
+
+  <div>
+    <h2>Turnos Finalizados por Médico</h2>
+    <canvas
+      baseChart
+      [data]="completedDoctorChartData"
+      [options]="completedDoctorChartOptions"
+      chartType="doughnut"
+    ></canvas>
+  </div>
+</div>

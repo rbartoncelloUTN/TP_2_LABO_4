@@ -12,6 +12,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { User } from '../../Interfaces/user';
+import { KeyValuePipe } from '../../pipes/key-value.pipe';
 
 export interface DialogData {
   animal: string;
@@ -30,6 +31,7 @@ export interface DialogData {
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
+    KeyValuePipe,
   ],
   templateUrl: './modal-form.component.html',
   styleUrl: './modal-form.component.css',
@@ -40,17 +42,13 @@ export class ModalFormComponent {
   peso?: number;
   temperatura?: number;
   presion?: number;
-  ramdom = ['Caries', 'Dolores'];
   dynamic = '';
   dynamic_key = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public patient: User
-  ) {
-    const randomIndex = Math.floor(Math.random() * this.ramdom.length);
-    this.dynamic_key = this.ramdom[randomIndex];
-  }
+  ) {}
 
   closeDialog() {
     const result = {

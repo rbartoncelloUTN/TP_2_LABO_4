@@ -1,0 +1,21 @@
+<div class="welcome-container">
+  <img
+    src="../../../assets/images/logo-smmp-color-new.png"
+    alt="Logo de la Clínica SMG"
+    class="logo"
+  />
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+  <div class="buttons">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="navigateTo('createNewAppointment')"
+    >
+      Turnos
+    </button>
+    <button mat-raised-button color="accent" (click)="navigateTo('welcome')">
+      Mi Perfil
+    </button>
+  </div>
+</div>

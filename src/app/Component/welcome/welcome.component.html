@@ -53,12 +53,14 @@
     </div>
   </div>
   <div [hiddenComponent]="userData.rol !== 'Especialista'">
-    <button (click)="handleSelectAvaiblesDays()">Mis horarios</button>
+    <button class="btn" (click)="handleSelectAvaiblesDays()">
+      Mis horarios
+    </button>
   </div>
-  <div
-    class="table-container"
-    [hiddenComponent]="userData.rol === 'Especialista'"
-  >
+  <div [hiddenComponent]="userData.rol !== 'Administrador'">
+    <button class="btn" (click)="goTo()">Graficos</button>
+  </div>
+  <div class="table-container" [hiddenComponent]="userData.rol !== 'Paciente'">
     <h2>Historial de turnos</h2>
     <table class="styled-table">
       <thead>
@@ -77,12 +79,23 @@
           <td>{{ appointment.date | date : "dd/MM/yyyy HH:mm" }}</td>
           <td>{{ appointment.specialistName }}</td>
           <td>{{ appointment.specialty }}</td>
-          <td>{{ appointment?.historical.temperatura }}</td>
-          <td>{{ appointment?.historical.presion }}</td>
-          <td>{{ appointment?.historical.peso }}</td>
-          <td>{{ appointment?.historical.altura }}</td>
+          <td>{{ appointment?.historical?.['temperatura'] }}</td>
+          <td>{{ appointment?.historical?.['presion'] }}</td>
+          <td>{{ appointment?.historical?.['peso'] }}</td>
+          <td>{{ appointment?.historical?.['altura'] }}</td>
         </tr>
       </tbody>
     </table>
+    <div>
+      <label for="specialities-select"
+        >Seleccione la especialidad a descargar:</label
+      >
+      <select id="specialities-select" (change)="downloadPdf($event.target)">
+        <option value="" disabled selected>Especialidad</option>
+        <option *ngFor="let item of getSpecialities()" [value]="item">
+          {{ item }}
+        </option>
+      </select>
+    </div>
   </div>
 </div>

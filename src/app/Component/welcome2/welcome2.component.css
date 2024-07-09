@@ -1,0 +1,17 @@
+.welcome-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.logo {
+  max-width: 150px;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  margin-top: 20px;
+}
+
+button {
+  margin: 10px;
+}

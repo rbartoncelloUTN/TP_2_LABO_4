@@ -138,8 +138,6 @@ export class LoginComponent implements OnInit {
         const currentUser = this.users.find((user) => user.mail === this.email);
         const images = await this.getImages(currentUser?.mail);
 
-        console.log(currentUser);
-
         if (currentUser)
           this.loggedUser = {
             ...currentUser,
@@ -165,7 +163,7 @@ export class LoginComponent implements OnInit {
               code: 'El especialista no ha sido verificado por un administrador aún',
             };
         }
-        this.router.navigate(['welcome']);
+        this.router.navigate(['welcome2']);
         this.authService.login(this.loggedUser);
       })
       .catch((e) => {

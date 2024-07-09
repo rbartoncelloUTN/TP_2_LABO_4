@@ -126,7 +126,6 @@ export class RegisterComponent implements OnInit {
       );
       especialidades.removeAt(index);
     }
-    console.log(this.userForm.value.especialidades);
   }
 
   isError(field: string): boolean {

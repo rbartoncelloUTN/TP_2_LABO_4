@@ -27,7 +27,5 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ModalComfirmAppointmentComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { appointment: Appointment }
-  ) {
-    console.log(this.data);
-  }
+  ) {}
 }

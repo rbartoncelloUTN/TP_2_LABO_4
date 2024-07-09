@@ -1,0 +1,20 @@
+<div class="container">
+  <h2 class="title">{{ data.user.apellido }}, {{ data.user.nombre }}</h2>
+  <div class="historial-container">
+    <h3>Historial Clinico</h3>
+    <div class="historial" *ngFor="let data of data.data">
+      <div class="historial-item">
+        <div class="historial-date">
+          Dia {{ data.date | date : "dd-MM-yyyy" }}
+        </div>
+        <div
+          *ngFor="let record of data.record | keyvalue"
+          class="historial-record"
+        >
+          <div class="record-key">{{ record.key }}:</div>
+          <div class="record-value">{{ record.value }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

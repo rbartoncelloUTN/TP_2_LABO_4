@@ -25,7 +25,5 @@ export class ModalReviewComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { comment: string; rating: string }
-  ) {
-    console.log('data', this.data);
-  }
+  ) {}
 }

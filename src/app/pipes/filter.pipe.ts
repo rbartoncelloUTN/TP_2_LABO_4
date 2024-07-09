@@ -4,6 +4,14 @@ import { Appointment } from '../Interfaces/Appointment ';
 import { UserService } from '../services/User/user.service';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 
+const formatDate = (date: Date): string => {
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear().toString();
+
+  return `${day}/${month}/${year}`;
+};
+
 export interface HistoricalRecord {
   appointmentId: string;
   doctorId: string;
@@ -56,7 +64,8 @@ export class FilterPipe implements PipeTransform {
           v.review?.comment?.toLowerCase().includes(search) ||
           v.status.toLowerCase().includes(search) ||
           keys.some((k) => k.toLowerCase().includes(search)) ||
-          values.some((v) => v.toString().toLowerCase().includes(search))
+          values.some((v) => v.toString().toLowerCase().includes(search)) ||
+          formatDate(v.date).includes(search)
         );
       });
     }

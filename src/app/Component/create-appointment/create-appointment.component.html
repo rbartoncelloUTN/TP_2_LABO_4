@@ -91,24 +91,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="selects-container" [hiddenComponent]="!selectedSpecialist">
-      <div class="form-group">
-        <label for="specialty">Especialidad</label>
-        <select id="specialty" formControlName="specialty" class="form-control">
-          <option *ngFor="let specialty of specialties" [value]="specialty">
-            {{ specialty }}
-          </option>
-        </select>
-      </div>
-      <div class="form-group" [hiddenComponent]="selectedSpecialty === null">
-        <label for="doctor">Doctores</label>
-        <select id="doctor" formControlName="doctor" class="form-control">
-          <option *ngFor="let doctor of doctors" [value]="doctor.dni">
-            {{ doctor?.apellido }}, {{ doctor?.nombre }}
-          </option>
-        </select>
-      </div>
-    </div> -->
     <div
       class="dates-container"
       id="datesContainer"
@@ -117,11 +99,13 @@
       <div
         *ngFor="let date of dates"
         class="date-item"
+        [class.selected]="date === selectedDate"
         (click)="handleDateClick(date)"
       >
         <div class="date-content">
-          <div class="date-weekday">{{ date.weekDay }}</div>
-          <div class="date-date">{{ date.date }}</div>
+          <div class="date-date">
+            {{ date.dateComplete | date : "dd-MM-yyyy" }}
+          </div>
         </div>
       </div>
     </div>
@@ -132,7 +116,7 @@
           class="appointment-item"
           (click)="handleHourClick(hour)"
         >
-          {{ hour }}
+          {{ hour | dateHour }}
         </div>
       </div>
       <div class="column">
@@ -143,7 +127,7 @@
           class="appointment-item"
           (click)="handleHourClick(hour)"
         >
-          {{ hour }}
+          {{ hour | dateHour }}
         </div>
       </div>
       <div class="column">
@@ -152,7 +136,7 @@
           class="appointment-item"
           (click)="handleHourClick(hour)"
         >
-          {{ hour }}
+          {{ hour | dateHour }}
         </div>
       </div>
     </div>

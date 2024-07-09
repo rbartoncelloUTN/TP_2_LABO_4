@@ -19,6 +19,10 @@ import { AuthService } from '../../services/Auth/auth.service';
 import { Appointment, Status } from '../../Interfaces/Appointment ';
 import { AppointmentService } from '../../services/Appointment/appointment.service';
 import { ExcelService } from '../../services/excel.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { BoxUserComponent } from '../box-user/box-user.component';
 
 @Component({
   selector: 'app-users',
@@ -28,6 +32,10 @@ import { ExcelService } from '../../services/excel.service';
     BooleanToButtonPipe,
     HideComponentDirective,
     LoaderComponent,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    BoxUserComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -52,6 +60,7 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.user = this.authService.getUser() as User;
     this.appointmentService.getAppointments().subscribe((appointments) => {
       this.appointments = appointments.filter(
@@ -109,7 +118,6 @@ export class UsersComponent implements OnInit {
         });
       });
 
-      console.log('User enabled status updated successfully');
       Promise.all([this.userService.getUsers('doctors')])
         .then(() => {
           this.users = this.userService.users;
@@ -128,5 +136,8 @@ export class UsersComponent implements OnInit {
   exportDataToExcel(): void {
     const data = this.users.patients;
     this.excelService.exportToExcel(data, 'pacientes', 'patientsData');
+  }
+  openDetails(user: User) {
+    console.log('Icon clicked', user);
   }
 }

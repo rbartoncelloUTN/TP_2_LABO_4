@@ -4,14 +4,18 @@ import { AuthService } from '../../services/Auth/auth.service';
 import { HideComponentDirective } from '../../directives/hide-component.directive';
 import { SelectAvailableDaysComponent } from '../select-available-days/select-available-days.component';
 import { Router } from '@angular/router';
-import { routes } from '../../app.routes';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { HistoricalRecord } from '../../pipes/filter.pipe';
 import { AppointmentService } from '../../services/Appointment/appointment.service';
 import { Appointment, Status } from '../../Interfaces/Appointment ';
 import { CommonModule } from '@angular/common';
 import { convertTimestampToDate } from '../../utils/date';
-import { Timestamp, updateDoc } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
+import { PdfService } from '../../services/pdf.service';
+
+interface Info extends Appointment {
+  historical?: Record<string, string | number>;
+}
 
 @Component({
   selector: 'app-welcome',
@@ -27,17 +31,21 @@ export class MyProfileComponent implements OnInit {
   appointmentService = inject(AppointmentService);
   historicalRecords!: HistoricalRecord[];
   appointments!: Appointment[];
-  info!: any;
+  info!: Info[];
 
   userData!: User;
 
-  constructor() {
+  constructor(private pdfService: PdfService) {
     this.getHistorial();
   }
 
   ngOnInit(): void {
     this.userData = this.auth.getUser() as User;
     this.getHistorial();
+  }
+
+  getSpecialities() {
+    return new Set(this.info.map((i) => i.specialty));
   }
 
   getHistorial() {
@@ -61,8 +69,7 @@ export class MyProfileComponent implements OnInit {
       });
       this.appointments = this.appointments.filter(
         (appointment) =>
-          appointment.patientId?.toString() ===
-            this.userData.dni.toString() &&
+          appointment.patientId?.toString() === this.userData.dni.toString() &&
           appointment.status === Status.COMPLETED
       );
       this.appointments.sort((a, b) => b.date.getTime() - a.date.getTime());
@@ -73,7 +80,7 @@ export class MyProfileComponent implements OnInit {
       this.historicalRecords = this.historicalRecords.filter(
         (record) => record.patientId === this.userData.dni
       );
-      
+
       this.info = this.appointments.map((appointment) => {
         const historical = this.historicalRecords.find(
           (h) => h.appointmentId === appointment.id
@@ -83,11 +90,23 @@ export class MyProfileComponent implements OnInit {
           historical: historical?.record,
         };
       });
-      console.log(this.info);
     });
   }
 
   handleSelectAvaiblesDays(): void {
     this.route.navigate(['availableDays']);
+  }
+
+  goTo(): void {
+    this.route.navigate(['graphic']);
+  }
+
+  public downloadPdf(speciality: any): void {
+    console.log(speciality.value);
+    this.pdfService.generatePdf(
+      this.info.filter((i) => i.specialty.includes(speciality.value)),
+      '../../../assets/images/logo-smmp-color-new.png',
+      speciality.value
+    );
   }
 }

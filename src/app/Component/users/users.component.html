@@ -7,6 +7,12 @@
       Nuevo Administrador
     </button>
   </div>
+  <div style="display: flex; align-items: center; width: 80%; flex-direction: column">
+    <div class="title-container">
+      <h1>Lista de Pacientes Atendidos</h1>
+    </div>
+    <app-box-user [users]="users.patients"></app-box-user>
+  </div>
   <div class="title-container" [hiddenComponent]="user.rol === 'Especialista'">
     <h1>Lista de Especialistas</h1>
   </div>
@@ -52,40 +58,7 @@
     <div class="title-container">
       <h1>Lista de Pacientes Atendidos</h1>
     </div>
-    <div
-      [hiddenComponent]="user.rol !== 'Administrador'"
-      class="button-container"
-    >
-      <button mat-raised-button color="primary" (click)="exportDataToExcel()">
-        Descargar
-      </button>
-    </div>
   </div>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Correo</th>
-        <th>DNI</th>
-        <th>Apellido</th>
-        <th>Nombre</th>
-        <th>Edad</th>
-        <th>Obra Social</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        *ngFor="let user of users.patients"
-        [hiddenComponent]="user.rol !== 'Paciente'"
-      >
-        <td>{{ user.mail }}</td>
-        <td>{{ user.dni }}</td>
-        <td>{{ user.apellido }}</td>
-        <td>{{ user.nombre }}</td>
-        <td>{{ user.edad }}</td>
-        <td>{{ user.obraSocial }}</td>
-      </tr>
-    </tbody>
-  </table>
   <div class="title-container" [hiddenComponent]="user.rol === 'Especialista'">
     <h1>Lista de Administradores</h1>
   </div>

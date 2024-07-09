@@ -94,3 +94,13 @@ td.button-cell {
   color: red;
   font-style: italic;
 }
+
+.example-card {
+  max-width: 400px;
+}
+
+
+.icon-btn {
+  color: #fff;
+  cursor: pointer;
+}

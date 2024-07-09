@@ -29,6 +29,14 @@
   margin-bottom: 15px;
 }
 
+.form-field-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
 .mat-form-field {
   width: 100%;
 }

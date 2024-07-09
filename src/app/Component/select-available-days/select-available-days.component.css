@@ -1,17 +1,28 @@
+.root {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid red;
+}
+
 .dates-container {
   display: flex;
-  align-self: center;
   margin-top: 15px;
-  flex-direction: row;
-  overflow-x: auto;
+  overflow-x: auto; /* Hace que el contenedor sea scrollable horizontalmente */
   white-space: nowrap;
+  background-color: #d7e5d0;
+  border-radius: 20px;
+  padding: 10px;
+  max-width: 80%;
 }
 
 .date-item {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
   border-radius: 15px;
   margin: 10px;
   padding: 10px;
@@ -25,19 +36,36 @@
   background-color: #e0ffff;
 }
 
+.date-item.selected {
+  background-color: #010102;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 500;
+}
+
 .date-weekday {
   font-size: 20px;
   font-weight: 600;
+  text-align: center;
+}
+
+.date-date {
+  font-size: 20px;
+  font-weight: 400;
 }
 
 .appointments-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-top: 15px;
+  background-color: #f3dcdc;
+  padding: 10px;
+  border-radius: 15px;
 }
 
 .column {
-  width: 30%;
+  width: calc(33.33% - 20px);
   padding: 10px;
 }
 
@@ -50,7 +78,6 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: center;
-  flex: 1;
 }
 
 .appointment-item.selected {
@@ -62,7 +89,7 @@
   background-color: #e0ffff;
 }
 
-.buttonContainer {
+.button-container {
   display: flex;
   justify-content: center;
   align-items: center;

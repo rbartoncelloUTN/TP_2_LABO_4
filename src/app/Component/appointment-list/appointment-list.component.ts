@@ -102,7 +102,6 @@ export class AppointmentListComponent {
   }
 
   openReviewDialog() {
-    console.log(this.appointmentFocused);
     const dialogRef = this.dialog.open(ModalReviewComponent, {
       data: this.appointmentFocused?.review,
     });
@@ -149,7 +148,6 @@ export class AppointmentListComponent {
       if (result) {
         try {
           const collectionRef = collection(this.firestore, 'historyRecord');
-
           const docRef = doc(collectionRef, `${new Date().getTime()}`);
           setDoc(docRef, {
             patientId: patient?.dni,

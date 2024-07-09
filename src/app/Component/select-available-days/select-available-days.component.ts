@@ -43,7 +43,9 @@ export class SelectAvailableDaysComponent implements OnInit {
         month: string;
       }
     | undefined;
-
+  countSelectedHours = 0;
+  hourFrom: any;
+  hourTo: any;
   get halfLength(): number {
     return Math.ceil(this.appointmetOptions.length / 3);
   }
@@ -83,6 +85,7 @@ export class SelectAvailableDaysComponent implements OnInit {
     day: string;
     month: string;
   }) {
+    this.countSelectedHours = 0;
     this.dateSelected = date;
 
     this.appointmetOptions = generateHours(
@@ -93,7 +96,7 @@ export class SelectAvailableDaysComponent implements OnInit {
     });
 
     const hoursSaved = this.dateSaved.find(
-      (data) => data.day === `${date?.day}/${date?.month}/2024`
+      (data) => data.day === `${date?.day}/${Number(date?.month) + 1}/2024`
     )?.hours;
 
     if (hoursSaved) {
@@ -112,6 +115,27 @@ export class SelectAvailableDaysComponent implements OnInit {
 
   handleHourClick(item: { hour: string; selected: boolean }) {
     item.selected = !item.selected;
+    if (item.selected) {
+      this.countSelectedHours++;
+      switch (this.countSelectedHours) {
+        case 1:
+          this.hourFrom = this.appointmetOptions.findIndex(
+            (data) => data.hour === item.hour
+          );
+          break;
+        case 2:
+          this.hourTo = this.appointmetOptions.findIndex(
+            (data) => data.hour === item.hour
+          );
+          this.appointmetOptions.forEach((a, index) => {
+            if (index >= this.hourFrom && index <= this.hourTo) {
+              a.selected = true;
+            }
+          });
+          this.countSelectedHours = 0;
+          break;
+      }
+    }
   }
 
   saveSelections(): void {
@@ -120,6 +144,13 @@ export class SelectAvailableDaysComponent implements OnInit {
     );
     const selectedItemIds = selectedItems.map((item) => item.hour);
     this.openDialog(selectedItemIds);
+  }
+
+  cleanSelections(): void {
+    this.appointmetOptions = this.appointmetOptions.map((item) => {
+      return { ...item, selected: false };
+    });
+    this.countSelectedHours = 0;
   }
 
   openDialog(selectedItemIds: string[]) {
@@ -173,6 +204,7 @@ export class SelectAvailableDaysComponent implements OnInit {
         this.isLoading = false;
         this.loadAppointments();
         this.appointmetOptions = [];
+        this.dateSelected = undefined;
       } else {
         this.isLoading = false;
       }

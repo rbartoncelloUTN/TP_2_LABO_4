@@ -20,10 +20,16 @@
     <mat-label>Presión (mmHg)</mat-label>
     <input matInput type="number" [(ngModel)]="presion" />
   </mat-form-field>
-  <mat-form-field class="form-field">
-    <mat-label>{{ dynamic_key }}</mat-label>
-    <input matInput [(ngModel)]="dynamic" />
-  </mat-form-field>
+  <div class="form-field-row">
+    <mat-form-field>
+      <mat-label>Clave</mat-label>
+      <input matInput [(ngModel)]="dynamic_key" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Valor</mat-label>
+      <input matInput [(ngModel)]="dynamic" />
+    </mat-form-field>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions">
   <button mat-button (click)="closeDialog()" cdkFocusInitial>Guardar</button>

@@ -8,6 +8,7 @@ import { signOut } from 'firebase/auth';
 import { HideComponentDirective } from '../../directives/hide-component.directive';
 import { AuthService } from '../../services/Auth/auth.service';
 import { User } from '../../Interfaces/user';
+import { HidePipe } from '../../pipes/hide.pipe';
 
 @Component({
   selector: 'app-navbar',
@@ -17,6 +18,7 @@ import { User } from '../../Interfaces/user';
     MatButtonModule,
     MatIconModule,
     HideComponentDirective,
+    HidePipe,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
@@ -48,7 +50,6 @@ export class NavbarComponent implements OnChanges {
         this.show = false;
       }
     });
-    console.log('Usuario en NavbarComponent:', this.user);
   }
   handleClickGoToHome() {
     this.router.navigate(['welcome']);

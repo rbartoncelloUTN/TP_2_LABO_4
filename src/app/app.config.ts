@@ -8,6 +8,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
 import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,5 +31,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(),
     provideAnimationsAsync(),
+    provideCharts(withDefaultRegisterables()),
   ],
 };
