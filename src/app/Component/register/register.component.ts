@@ -1,5 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import {
+  FormArray,
+  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
@@ -21,6 +23,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Roles } from '../../Interfaces/user';
 import { DialogTextComponent } from '../dialog-text/dialog-text.component';
 import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
+import { Storage, ref } from '@angular/fire/storage';
+import { uploadBytes } from 'firebase/storage';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-register',
@@ -31,6 +36,7 @@ import { DialogInfoComponent } from '../dialog-info/dialog-info.component';
     ReactiveFormsModule,
     LoaderComponent,
     HideComponentDirective,
+    RecaptchaModule,
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
@@ -46,12 +52,15 @@ export class RegisterComponent implements OnInit {
   isValid: boolean = true;
   isLoading: boolean = false;
   especialidades!: { name: string }[] | any[];
+  fileImages: any[] = [];
 
   constructor(
     private firestore: Firestore,
     private router: Router,
     private route: ActivatedRoute,
-    public auth: Auth
+    public auth: Auth,
+    private storege: Storage,
+    private fb: FormBuilder
   ) {}
 
   getEspecialidades(): void {
@@ -64,12 +73,15 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  executeRecaptcha(token: any) {
+    console.log(token);
+  }
+
   ngOnInit(): void {
     this.getEspecialidades();
     const { isPatient, isAdmin } = this.route.snapshot.queryParams;
     this.isPatient = isPatient === 'true';
     this.isAdmin = isAdmin === 'true';
-    console.log(this.isPatient);
     this.userForm = new FormGroup({
       dni: new FormControl('', [
         Validators.required,
@@ -91,7 +103,7 @@ export class RegisterComponent implements OnInit {
         Validators.max(100),
       ]),
       obraSocial: new FormControl('', [Validators.required]),
-      especialidad: new FormControl('', [Validators.required]),
+      especialidades: this.fb.array([]),
       mail: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [
         Validators.required,
@@ -100,7 +112,20 @@ export class RegisterComponent implements OnInit {
       perfilImagen1: new FormControl('', [Validators.required]),
       perfilImagen2: new FormControl('', [Validators.required]),
     });
-    console.log(this.especialidades);
+  }
+
+  onCheckboxChange(event: any) {
+    const especialidades: FormArray = this.userForm.get(
+      'especialidades'
+    ) as FormArray;
+    if (event.target.checked) {
+      especialidades.push(this.fb.control(event.target.value));
+    } else {
+      const index = especialidades.controls.findIndex(
+        (x) => x.value === event.target.value
+      );
+      especialidades.removeAt(index);
+    }
   }
 
   isError(field: string): boolean {
@@ -108,7 +133,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onAddEspecialidad(): void {
-    console.log('Agregar nueva especialidad');
     this.openDialog();
   }
 
@@ -117,41 +141,67 @@ export class RegisterComponent implements OnInit {
     let newSpecialty = '';
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-      newSpecialty = result;
-      const index = this.especialidades.findIndex(
-        (especialidad) =>
-          especialidad.name.toLowerCase() === newSpecialty.toLowerCase()
-      );
-      if (index >= 0) {
-        this.flagError = true;
-        this.msjError = 'La especialidad ya existe';
-        const dialogInfoRef = this.dialog.open(DialogInfoComponent, {
-          data: {
-            title: 'Error',
-            message: 'La especialidad ya existe',
-            isError: true,
-          },
-        });
-      } else {
-        this.especialidades.push({ name: newSpecialty });
+      if (result) {
+        newSpecialty = result;
+        const index = this.especialidades.findIndex(
+          (especialidad) =>
+            especialidad.name.toLowerCase() === newSpecialty.toLowerCase()
+        );
+        if (index >= 0) {
+          this.flagError = true;
+          this.msjError = 'La especialidad ya existe';
+          this.dialog.open(DialogInfoComponent, {
+            data: {
+              title: 'Error',
+              message: 'La especialidad ya existe',
+              isError: true,
+            },
+          });
+        } else {
+          this.especialidades.push({ name: newSpecialty });
+          this.dialog.open(DialogInfoComponent, {
+            data: {
+              title: 'La especialidad fue agregada',
+            },
+          });
+          let col = collection(this.firestore, 'especialidades');
+          addDoc(col, { name: newSpecialty, id: this.especialidades.length });
+        }
       }
     });
   }
 
+  saveImage($event: any, number: number): void {
+    this.fileImages.push($event.target.files[0]);
+  }
+
+  uploadImage(): void {
+    const id = this.userForm.get('mail')?.value;
+
+    this.fileImages.map((image, index) => {
+      const imageRef = ref(this.storege, `users/${id}/${index}`);
+      uploadBytes(imageRef, image)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    });
+  }
+
   onSubmit(): void {
-    console.log(this.especialidades);
     if (this.isPatient) {
-      this.userForm.get('especialidad')?.setValidators(null);
-      this.userForm.get('especialidad')?.updateValueAndValidity();
+      this.userForm.get('especialidades')?.setValidators(null);
+      this.userForm.get('especialidades')?.updateValueAndValidity();
     } else {
       this.userForm.get('obraSocial')?.setValidators(null);
       this.userForm.get('obraSocial')?.updateValueAndValidity();
       this.userForm.get('perfilImagen2')?.setValidators(null);
       this.userForm.get('perfilImagen2')?.updateValueAndValidity();
       if (this.isAdmin) {
-        this.userForm.get('especialidad')?.setValidators(null);
-        this.userForm.get('especialidad')?.updateValueAndValidity();
+        this.userForm.get('especialidades')?.setValidators(null);
+        this.userForm.get('especialidades')?.updateValueAndValidity();
       }
     }
     if (this.userForm.valid) {
@@ -195,14 +245,21 @@ export class RegisterComponent implements OnInit {
                   rol: Roles.PATIENT,
                 }
               : {
-                  especialidad: this.userForm.value.especialidad || null,
+                  especialidades: this.userForm.value.especialidades || null,
                   enabled: true,
+                  verificated: false,
                   rol: this.isAdmin ? Roles.ADMIN : Roles.DOCTOR,
                 }),
           });
+
+          this.uploadImage();
+
+          if (!this.isAdmin) {
+            this.router.navigate(['login']);
+          }
           this.userForm.reset();
 
-          this.router.navigate(['login']);
+          //signOut(this.auth);
         })
         .catch((e) => {
           this.flagError = true;
@@ -225,7 +282,6 @@ export class RegisterComponent implements OnInit {
           this.isLoading = false;
         });
     } else {
-      console.log('Formulario no válido');
       this.isValid = false;
     }
   }

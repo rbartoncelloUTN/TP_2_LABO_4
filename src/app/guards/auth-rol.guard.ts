@@ -8,5 +8,5 @@ import { Roles } from '../Interfaces/user';
 export const authRolGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
 
-  return auth.getUser()?.rol === Roles.ADMIN;
+  return auth.getUser()?.rol !== Roles.PATIENT;
 };

@@ -7,6 +7,8 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,11 +23,14 @@ export const appConfig: ApplicationConfig = {
           authDomain: 'tp-sala-juegos-a2ac6.firebaseapp.com',
           messagingSenderId: '472694916683',
         })
-      )
+      ),
+      provideStorage(() => getStorage())
     ),
     importProvidersFrom(provideAuth(() => getAuth())),
     importProvidersFrom(provideFirestore(() => getFirestore())),
     provideAnimationsAsync(),
-    provideHttpClient(), provideAnimationsAsync(),
+    provideHttpClient(),
+    provideAnimationsAsync(),
+    provideCharts(withDefaultRegisterables()),
   ],
 };

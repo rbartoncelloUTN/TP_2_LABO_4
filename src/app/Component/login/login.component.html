@@ -1,27 +1,31 @@
 <div class="container">
   <app-loader [isLoading]="isLoading"></app-loader>
   <div class="login-form">
-    <h1 style="font-weight: bold; display: flex; justify-content: center">
-      Iniciar sesión
-    </h1>
+    <div style="display: flex; justify-content: center">
+      <img
+        class="image"
+        src="../../../assets/images/logo-smmp-color-new.svg"
+        alt="Swiss Medical Group"
+      />
+    </div>
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="email">Correo electrónico:</label>
         <input
           type="email"
           id="email"
           [(ngModel)]="email"
+          placeholder="Correo electrónico"
           [ngModelOptions]="{ standalone: true }"
           name="email"
           required
         />
       </div>
       <div class="form-group">
-        <label for="password">Contraseña:</label>
         <input
           type="password"
           id="password"
           name="password"
+          placeholder="Contaseña"
           [(ngModel)]="password"
           [ngModelOptions]="{ standalone: true }"
           required
@@ -32,47 +36,118 @@
       }
       <button type="submit" class="btn btn-primary full-width">Enviar</button>
     </form>
-
     <div class="button-group">
-      <button
-        (click)="register($event, true)"
-        type="button"
-        class="btn btn-primary full-width"
-        style="background-color: darkgoldenrod"
-      >
-        Registrar paciente
-      </button>
-      <button
-        (click)="register($event)"
-        type="button"
-        class="btn btn-primary full-width"
-        style="background-color: darkgoldenrod"
-      >
-        Registrar espicialista
-      </button>
+      <div>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'admin@tidissajiiu.com')"
+        >
+          Admin
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'admin2@yopmail.com')"
+        >
+          Admin 2
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-info"
+          (click)="autoCompleteDoctor($event)"
+        >
+          Doctor
+        </button>
+        <button
+          type="button"
+          class="btn btn-info"
+          (click)="autoCompleteEnfermero($event)"
+        >
+          Enfermero (blockeado)
+        </button>
+        <button
+          type="button"
+          class="btn btn-info"
+          (click)="autoCompleteCirujano($event)"
+        >
+          Cirujano (sin validar email)
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'paciente1@yopmail.com')"
+        >
+          Paciente 1
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="autoCompleteLogin($event, 'juanperez@yopmail.com')"
+        >
+          Paciente 2
+        </button>
+      </div>
     </div>
-    <div class="button-group">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="autoCompleteAdmin($event)"
-      >
-        Admin
-      </button>
-      <button
-        type="button"
-        class="btn btn-info"
-        (click)="autoCompleteEmployer($event)"
-      >
-        Espicialista
-      </button>
-      <button
-        type="button"
-        class="btn btn-info"
-        (click)="autoCompleteEmployer($event)"
-      >
-        Paciente
-      </button>
+  </div>
+  <div
+    style="
+      display: flex;
+      width: 70%;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+    "
+  >
+    <div class="background-image">
+      <div class="content">
+        <p style="font-size: 50px; color: #000000">
+          ¡Bienvenido a Mi Swiss Medical!
+        </p>
+        <div>
+          <button
+            (click)="register($event, true)"
+            type="button"
+            class="btn btn-primary full-width"
+            style="background-color: darkgoldenrod"
+          >
+            Registrarse
+          </button>
+        </div>
+        <div
+          style="
+            display: flex;
+            position: absolute;
+            flex-direction: column;
+            right: 0px;
+            gap: 20px;
+            margin: 10px;
+            padding: 10px;
+            background-color: #ffffff;
+          "
+        >
+          <div
+            *ngFor="let especialidad of getTopThreeOfEachRole()"
+            style="display: flex; flex-direction: column; gap: 25px"
+          >
+            <img
+              [src]="especialidad.perfilImagen1"
+              style="
+                width: 100px;
+                height: 100px;
+                resize: both;
+                border-radius: 50px;
+              "
+              (click)="autoCompleteLogin($event, especialidad.mail)"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

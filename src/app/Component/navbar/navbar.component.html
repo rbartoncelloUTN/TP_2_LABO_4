@@ -1,10 +1,17 @@
-<nav class="navbar">
+<nav class="navbar" [hiddenComponent]="!show">
   <div>
     <button (click)="handleClickGoToHome()" color="warn" mat-button>
-      Inicio
+      Mi Perfil
     </button>
     <button (click)="handleClickGoToChat()" color="warn" mat-button>
-      Usuarios
+      {{ user?.rol === "Administrador" ? "Usuarios" : "Pacientes" }}
+    </button>
+    <button
+      (click)="handleClickGoToCreateNewAppointment()"
+      color="warn"
+      mat-button
+    >
+      Turnos
     </button>
   </div>
   <div>

@@ -1,20 +1,30 @@
 .container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  flex-direction: row;
+  flex: 1;
   border: 1px solid #000;
 }
 
 .login-form {
-  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 24%;
   margin: auto;
   padding: 50px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  border: 1px solid #000;
+  border: 1px solid #00ff55;
+}
+
+.image {
+  height: 80px;
+  margin-bottom: 50px;
+  margin-top: 80px;
 }
 
 .login-form h1 {
@@ -32,10 +42,22 @@ label {
 
 input[type="email"],
 input[type="password"] {
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentcolor;
+  padding: 4px 0px 5px;
+  border: 0px;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0px;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  min-width: 0px;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  animation-name: mui-auto-fill-cancel;
+  animation-duration: 10ms;
+  border-bottom: 1px solid #000;
 }
 
 button {
@@ -86,3 +108,46 @@ button {
 .full-width {
   width: 100%;
 }
+
+.background-image {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background-image: url("../../../assets/images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+}
+
+/*
+
+display: flex;
+          position: relative;
+          bottom: -500px;
+          border: 1px solid #548;
+          justify-content: flex-end*/

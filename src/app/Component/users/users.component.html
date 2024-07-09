@@ -1,39 +1,90 @@
 <!-- src/app/user-list/user-list.component.html -->
 
 <div class="container">
-  <div class="btn-container">
+  <app-loader [isLoading]="isLoading"></app-loader>
+  <div class="btn-container" [hiddenComponent]="user.rol === 'Especialista'">
     <button class="btn btn-primary" (click)="addAdmin()">
       Nuevo Administrador
     </button>
   </div>
-  <div class="title-container">
-    <h1>Lista de Usuarios</h1>
+  <div style="display: flex; align-items: center; width: 80%; flex-direction: column">
+    <div class="title-container">
+      <h1>Lista de Pacientes Atendidos</h1>
+    </div>
+    <app-box-user [users]="users.patients"></app-box-user>
   </div>
-  <table class="table table-bordered">
+  <div class="title-container" [hiddenComponent]="user.rol === 'Especialista'">
+    <h1>Lista de Especialistas</h1>
+  </div>
+  <table
+    class="table table-bordered"
+    [hiddenComponent]="user.rol === 'Especialista'"
+  >
     <thead>
       <tr>
-        <th>Rol</th>
+        <th>DNI</th>
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Especialidad</th>
+        <th>Habilitado</th>
+        <th>Aprobado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let user of users.doctors"
+        [hiddenComponent]="user.rol !== 'Especialista'"
+      >
+        <td>{{ user.dni }}</td>
+        <td>{{ user.apellido }}</td>
+        <td>{{ user.nombre }}</td>
+        <td>{{ user.especialidad }}</td>
+        <td
+          [innerHTML]="user.enabled | booleanToButton"
+          (click)="
+            updateUserEnabledStatus(user.dni, !user.enabled, !!user.verificated)
+          "
+        ></td>
+        <td
+          [innerHTML]="user.verificated | booleanToButton"
+          (click)="
+            updateUserEnabledStatus(user.dni, !!user.enabled, !user.verificated)
+          "
+        ></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="display: flex; align-items: center; width: 80%">
+    <div class="title-container">
+      <h1>Lista de Pacientes Atendidos</h1>
+    </div>
+  </div>
+  <div class="title-container" [hiddenComponent]="user.rol === 'Especialista'">
+    <h1>Lista de Administradores</h1>
+  </div>
+  <table
+    class="table table-bordered"
+    [hiddenComponent]="user.rol === 'Especialista'"
+  >
+    <thead>
+      <tr>
         <th>Correo</th>
         <th>DNI</th>
         <th>Apellido</th>
         <th>Nombre</th>
-        <th>Edad</th>
-        <th>Especialidad</th>
-        <th>Obra Social</th>
         <th>Habilitado</th>
-        <th>Verificado</th>
+        <th>Aprobado</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.rol }}</td>
+      <tr
+        *ngFor="let user of users.administrators"
+        [hiddenComponent]="user.rol !== 'Administrador'"
+      >
         <td>{{ user.mail }}</td>
         <td>{{ user.dni }}</td>
         <td>{{ user.apellido }}</td>
         <td>{{ user.nombre }}</td>
-        <td>{{ user.edad }}</td>
-        <td>{{ user.especialidad }}</td>
-        <td>{{ user.obraSocial }}</td>
         <td [innerHTML]="user.enabled | booleanToButton"></td>
         <td [innerHTML]="user.verificated | booleanToButton"></td>
       </tr>

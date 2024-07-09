@@ -2,10 +2,11 @@ export interface User {
   dni: number;
   perfilImagen2: null | string;
   especialidad?: string;
+  especialidades?: string[];
   edad: number;
   apellido: string;
   mail: string;
-  perfilImagen1: string;
+  perfilImagen1?: string;
   password: string;
   nombre: string;
   enabled?: boolean;

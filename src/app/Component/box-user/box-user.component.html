@@ -1,0 +1,36 @@
+<div
+  style="
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    padding: 10px;
+    justify-content: center;
+  "
+>
+  <div *ngFor="let user of users">
+    <mat-card class="card" appearance="raised">
+      <mat-card-header>
+        <div
+          mat-card-avatar
+          style="
+            background-image: url('{{ user.perfilImagen1 }}');
+            background-size: cover;
+          "
+        ></div>
+        <mat-card-title>{{ user.apellido }} {{ user.nombre }}</mat-card-title>
+        <mat-card-subtitle>DNI: {{ user.dni }}</mat-card-subtitle>
+        <mat-card-subtitle>Edad: {{ user.edad }} años</mat-card-subtitle>
+        <mat-card-subtitle
+          >Obra social: {{ user.obraSocial }}</mat-card-subtitle
+        >
+      </mat-card-header>
+      <mat-card-actions align="end">
+        <mat-icon
+          [fontIcon]="currentUser.rol === 'Administrador' ? 'download' : 'add'"
+          class="icon-btn"
+          (click)="openDetails(user)"
+        ></mat-icon>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

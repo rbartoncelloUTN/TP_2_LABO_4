@@ -1,0 +1,25 @@
+<div>
+  <h2 mat-dialog-title>Registrarse</h2>
+  <mat-dialog-content class="mat-typography">
+    <div>
+      <img
+        src="../../../assets/images/doctor.png"
+        alt="Imagen 1"
+        (click)="register(false)"
+        mat-button
+        mat-dialog-close
+      />
+      <div>Especialista</div>
+    </div>
+    <div>
+      <img
+        src="../../../assets/images/paciente.png"
+        alt="Imagen 2"
+        (click)="register(true)"
+        mat-button
+        mat-dialog-close
+      />
+      <div>Paciente</div>
+    </div>
+  </mat-dialog-content>
+</div>

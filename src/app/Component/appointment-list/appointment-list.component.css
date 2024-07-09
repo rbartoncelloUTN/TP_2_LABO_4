@@ -1,0 +1,205 @@
+.appointment-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+}
+
+.appointment-card .info {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-card .info div {
+  margin-bottom: 10px;
+}
+
+.appointment-card .specialty {
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+.appointment-card .specialist-name {
+  font-size: 16px;
+  color: #666;
+}
+
+.appointment-card .date-time {
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+}
+
+.appointment-card .status {
+  font-size: 20px;
+  font-weight: bold;
+  color: #01030a;
+  text-align: center;
+}
+
+.appointment-card .btn {
+  font-size: 14px;
+  color: #e53935;
+  text-align: right;
+  margin-top: 10px;
+}
+
+.appointment-card .separator {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 10px 0;
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  gap: 25px;
+  padding: 10px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: space-around;
+}
+
+.button-container .btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container .btn:hover {
+  background-color: #0056b3;
+}
+
+.button-container .btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.button-container .btn-cancel {
+  background-color: #dc3545;
+}
+
+.button-container .btn-cancel:hover {
+  background-color: #c82333;
+}
+
+.custom-appointment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.custom-appointment-table th,
+.custom-appointment-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.custom-appointment-table th {
+  background-color: #007bff;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+}
+
+.custom-appointment-row:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.custom-td {
+  vertical-align: middle;
+}
+
+.custom-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.custom-btn {
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.custom-btn-reseña {
+  padding: 10px 16px;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: 2px solid #007bff;
+  justify-content: center;
+}
+
+.custom-btn:hover {
+  background-color: #0056b3;
+}
+
+.custom-btn-reseña:hover {
+  background-color: #0056b3;
+}
+
+.custom-btn-cancel {
+  background-color: #dc3545;
+}
+
+.custom-btn-cancel:hover {
+  background-color: #c82333;
+}
+
+/* Estilos para el encabezado del título */
+.title-header {
+  font-size: 24px;
+  color: #007bff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilos para los botones en línea */
+.custom-actions .custom-btn,
+.custom-actions .custom-btn-cancel {
+  flex: 1;
+  max-width: 150px;
+  text-align: center;
+}
+
+/* Estilos para botones más pequeños en móviles */
+@media screen and (max-width: 768px) {
+  .custom-btn,
+  .custom-btn-cancel {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}

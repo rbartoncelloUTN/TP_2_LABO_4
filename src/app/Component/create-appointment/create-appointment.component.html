@@ -1,0 +1,153 @@
+<body>
+  <div class="appointment-container">
+    <div
+      class="appointment-header"
+      [hiddenComponent]="currentUser?.rol === 'Especialista'"
+    >
+      <p class="appointment-label">Turnos para:</p>
+      <div class="appointment-details">
+        <p
+          class="patient-name"
+          [hiddenComponent]="currentUser?.rol !== 'Paciente'"
+        >
+          <span>{{ currentUser?.apellido }}, {{ currentUser?.nombre }}</span>
+        </p>
+        <div
+          class="patient-select"
+          [hiddenComponent]="currentUser?.rol !== 'Administrador'"
+        >
+          <div class="form-group">
+            <select
+              id="especialidad"
+              formControlName="especialidad"
+              class="form-control"
+              (change)="onPatientSelected($event)"
+            >
+              <option *ngFor="let patient of patients" [value]="patient.dni">
+                {{ patient?.apellido }}, {{ patient?.nombre }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="appointment-button" [hiddenComponent]="createNewAppointment">
+        <button (click)="requestAppointment()">Nuevo turno</button>
+      </div>
+    </div>
+    <div class="search-container" [hiddenComponent]="createNewAppointment">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar..."
+        [(ngModel)]="searchText"
+      />
+    </div>
+    <div
+      class="dates-container"
+      id="datesContainer"
+      [hiddenComponent]="!createNewAppointment"
+    >
+      <div
+        *ngFor="let doctor of doctors"
+        class="date-item"
+        [class.selected]="doctor.dni === selectedSpecialist?.dni"
+      >
+        <div class="date-content" (click)="onSpecialistSelected(doctor.dni)">
+          <img
+            [src]="doctor.perfilImagen1"
+            style="
+              width: 100px;
+              height: 100px;
+              resize: both;
+              border-radius: 50px;
+            "
+          />
+          <div class="date-weekday">{{ doctor.apellido }}</div>
+          <div class="date-weekday">{{ doctor.nombre }}</div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="dates-container"
+      id="datesContainer"
+      [hiddenComponent]="!selectedSpecialist"
+    >
+      <div
+        *ngFor="let specialty of specialties"
+        class="date-item"
+        [class.selected]="specialty === selectedSpecialty"
+      >
+        <div class="date-content" (click)="onSpecialtySelected(specialty)">
+          <img
+            src="../../../assets/images/medicine.png"
+            style="
+              width: 100px;
+              height: 100px;
+              resize: both;
+              border-radius: 50px;
+            "
+          />
+          <div class="date-weekday">{{ specialty }}</div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="dates-container"
+      id="datesContainer"
+      [hiddenComponent]="!selectedSpecialty"
+    >
+      <div
+        *ngFor="let date of dates"
+        class="date-item"
+        [class.selected]="date === selectedDate"
+        (click)="handleDateClick(date)"
+      >
+        <div class="date-content">
+          <div class="date-date">
+            {{ date.dateComplete | date : "dd-MM-yyyy" }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="appointments-container">
+      <div class="column">
+        <div
+          *ngFor="let hour of appointmetOptions.slice(0, halfLength)"
+          class="appointment-item"
+          (click)="handleHourClick(hour)"
+        >
+          {{ hour | dateHour }}
+        </div>
+      </div>
+      <div class="column">
+        <div
+          *ngFor="
+            let hour of appointmetOptions.slice(halfLength, halfLength * 2)
+          "
+          class="appointment-item"
+          (click)="handleHourClick(hour)"
+        >
+          {{ hour | dateHour }}
+        </div>
+      </div>
+      <div class="column">
+        <div
+          *ngFor="let hour of appointmetOptions.slice(halfLength * 2)"
+          class="appointment-item"
+          (click)="handleHourClick(hour)"
+        >
+          {{ hour | dateHour }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-appointment-list
+    [appointments]="
+      appointments
+        | filter
+          : searchText
+          : (patientSelected ? patientSelected : currentUser)
+    "
+    [hiddenComponent]="createNewAppointment"
+  ></app-appointment-list>
+</body>
